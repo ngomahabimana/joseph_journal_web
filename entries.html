@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Journal Entries</title>
+</head>
+<body>
+    <h1>📚 All Journal Entries</h1>
+    {% if entries %}
+        {% for entry in entries %}
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc;">
+                <pre>{{ entry }}</pre>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No entries yet.</p>
+    {% endif %}
+    <form action="/clear" method="POST">
+        <button type="submit">🧹 Clear All Entries</button>
+    </form>
+    <br>
+    <a href="/">🏠 Back to Home</a>
+</body>
+</html>
