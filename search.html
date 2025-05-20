@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Journal</title>
+</head>
+<body>
+    <h1>🔍 Search Journal Entries</h1>
+    <form method="POST">
+        <input type="text" name="query" placeholder="Type a word or date..." required>
+        <button type="submit">Search</button>
+    </form>
+    {% if query %}
+        <h3>Results for "{{ query }}":</h3>
+        {% if results %}
+            {% for result in results %}
+                <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc;">
+                    <pre>{{ result }}</pre>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No matching entries found.</p>
+        {% endif %}
+    {% endif %}
+    <br>
+    <a href="/">🏠 Back to Home</a>
+</body>
+</html>
