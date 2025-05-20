@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Joseph Ngoma | Journal</title>
+</head>
+<body>
+    <h1>Daily Devotional</h1>
+    <p><strong>Verse:</strong> {{ verse }}</p>
+    <p><strong>Devotional:</strong> {{ devotional }}</p>
+
+    <h2>Write Your Journal</h2>
+    <form method="post">
+        <textarea name="entry" rows="5" cols="60"></textarea><br>
+        <button type="submit">Save</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Past Entries</h2>
+    {% for entry in entries %}
+        <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
+            <pre>{{ entry }}</pre>
+        </div>
+    {% endfor %}
+</body>
+</html>
