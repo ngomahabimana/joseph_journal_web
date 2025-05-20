@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Joseph's Journal</title>
+</head>
+<body>
+    <h1>📖 Joseph's Journal</h1>
+    <h3>{{ verse }}</h3>
+    <h4>{{ devotional }}</h4>
+    <form action="/submit" method="POST">
+        <textarea name="entry" rows="6" cols="60" placeholder="Write your journal entry here..." required></textarea><br>
+        <button type="submit">Save Entry</button>
+    </form>
+    <br>
+    <a href="/entries">📚 View All Entries</a> | <a href="/search">🔍 Search Entries</a>
+</body>
+</html>
