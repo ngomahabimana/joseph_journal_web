@@ -1,14 +1,23 @@
 <!DOCTYPE html>
-
-html lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Search Journal</title>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
+    <nav style="margin-bottom: 20px;">
+        <a href="/">🏠 Home</a> |
+        <a href="/entries">📚 View Entries</a> |
+        <a href="/search">🔍 Search</a>
+    </nav>
+
     <h1>🔍 Search Journal Entries</h1>
+    <p>Find past thoughts, prayers, and inspiration</p>
+
     <form method="POST">
-        <input type="text" name="query" placeholder="Type a word or date..." required>
+        <input name="query" placeholder="Type a keyword..." required>
         <button type="submit">Search</button>
     </form>
 
@@ -16,43 +25,16 @@ html lang="en">
         <h3>Results for "{{ query }}":</h3>
         {% if results %}
             {% for result in results %}
-                <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc;">
+                <div style="margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc;">
                     <pre>{{ result }}</pre>
                 </div>
             {% endfor %}
         {% else %}
-            <p>No matching entries found.</p>
+            <p>No results found for your search.</p>
         {% endif %}
     {% endif %}
 
     <br>
-    <a href="/">🏠 Back to Home</a>
-</body>
-<header>
-<h1>Search Journal Entries</h1>
-<p>Find past thoughts, prayers, and inspiration</p>
-</header>
-<div class="container">
-<h2>🔍 Search Your Journal</h2>
-<form method="get">
-<input name="q" placeholder="Type a keyword..." required="" type="text"/>
-<button type="submit">Search</button>
-</form>
-<div class="result">
-      {% if query %}
-        <h3>Results for: "{{ query }}"</h3>
-        {% if results %}
-          {% for result in results %}
-            <div class="entry">
-<pre>{{ result }}</pre>
-</div>
-          {% endfor %}
-        {% else %}
-          <p class="no-results">No results found for your search.</p>
-        {% endif %}
-      {% endif %}
-    </div>
-<a class="back" href="{{ url_for('journal') }}">← Back to Journal</a>
-</div>
+    <a href="/">← Back to Home</a>
 </body>
 </html>
