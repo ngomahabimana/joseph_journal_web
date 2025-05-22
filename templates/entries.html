@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-
 <html>
 <head>
-<title>All Journal Entries</title>
-<link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
-<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/></head>
+    <title>All Journal Entries</title>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
+</head>
 <body>
-<h1>📚 All Journal Entries</h1>
-    {% for date, content in entries.items() %}
+    <nav style="margin-bottom: 20px;">
+        <a href="/">🏠 Home</a> |
+        <a href="/entries">📚 View Entries</a> |
+        <a href="/search">🔍 Search</a>
+    </nav>
+
+    <h1>📚 All Journal Entries</h1>
+
+    {% for entry in entries %}
         <div style="background-color: #fff; padding: 20px; margin: 20px auto; width: 80%; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-<h2>{{ date }}</h2>
-<pre style="text-align: left;">{{ content }}</pre>
-</div>
+            <pre style="text-align: left;">{{ entry }}</pre>
+        </div>
     {% endfor %}
+
     <p><a href="/">← Back to Home</a></p>
 </body>
 </html>
