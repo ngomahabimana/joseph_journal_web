@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Welcome | Joseph Ngoma's Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/></head>
+<body>
+<header>
+<h1>Joseph Habimana Ngoma</h1>
+<p>Voice for the Voiceless | Kingdom Writer | Spiritual Warrior</p>
+</header>
+<section class="hero">
+<h2>Welcome to the Multilingual Journal App</h2>
+<p>Reflect. Write. Grow. Let your spiritual journey be recorded with purpose and peace.</p>
+<a class="cta" href="{{ url_for('journal') }}">✍️ Start Journaling</a>
+</section>
+<section class="features">
+<div class="feature">
+<h3>✨ Daily Inspiration</h3>
+<p>Begin your day with fresh scripture and encouragement.</p>
+</div>
+<div class="feature">
+<h3>📝 Personal Journaling</h3>
+<p>Privately record your prayers, lessons, and revelations.</p>
+</div>
+<div class="feature">
+<h3>🔍 Searchable Archive</h3>
+<p>Find past entries easily by keywords or date.</p>
+</div>
+</section>
+<footer>
+        © 2025 Joseph Habimana Ngoma. All rights reserved.
+    </footer>
+</body>
+</html>
