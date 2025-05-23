@@ -10,7 +10,7 @@ app.secret_key = "your_secret_key"
 
 # ✅ Only declare once — here
 stored_username = "admin"
-stored_password_hash = "$2b$12$Kp8fPIxp7P8Y0Sl8Y.Ceq.2Tf3r7JZ9GcUN4lhZfLoU5eUsLMsQnO"  # hashed "1234"
+stored_password_hash = "$2b$12$T9LABCAafaSc6FZMwmozLOpilTySRDjIefmgnBFQTcX7IsoPHZGaa" # hashed "1234"
 
 @app.route("/", methods=["GET"])
 def home():
