@@ -1,2 +1,6 @@
 Flask==2.3.2
 reportlab==4.0.4
+flask-bcrypt==1.0.1
+git add requirements.txt
+git commit -m "Add flask-bcrypt to requirements"
+git push
