@@ -53,6 +53,22 @@ def submit():
         f.write(entry + "\n\n")
     return "Your entry has been saved! <a href='/journal'>Back to journal</a>"
 
+# ✅ Place this directly below the submit route
+@app.route("/clear", methods=["POST"])
+def clear():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    filename = f"journal_{date_str}.txt"
+
+    if os.path.exists(filename):
+        os.remove(filename)
+        message = "Today's journal entry has been cleared."
+    else:
+        message = "No entry found for today."
+
+    return f"<h3>{message}</h3><p><a href='/journal'>Back to Journal</a></p>"
 @app.route("/entries")
 def entries():
     if "user" not in session:
