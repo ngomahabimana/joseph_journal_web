@@ -95,11 +95,12 @@ def devotional():
         return f"<h2>No devotional found for today in {lang.upper()}</h2>"
 
     return render_template("devotional.html", devo=devo, lang=lang)
-    @app.route("/about")
+
+@app.route("/about")  # ✅ now properly aligned
 def about():
     return render_template("about.html")
 
-@app.route("/contact")
+@app.route("/contact")  # ✅ now properly aligned
 def contact():
     return render_template("contact.html")
 
