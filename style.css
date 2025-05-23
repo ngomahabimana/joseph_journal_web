@@ -2,7 +2,7 @@
 * General page layout */
 body {
   font-family: 'Poppins', sans-serif;
-  background: url("/static/background.jpg") no-repeat center center fixed;
+  background: url("/static/images/bg.jpg") no-repeat center center fixed;
   background-size: cover;
   margin: 0;
   padding: 2rem;
