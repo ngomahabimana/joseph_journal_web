@@ -127,6 +127,22 @@ def about():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    if "user" not in session:
+        return redirect(url_for("login"))
+        
+    results = []
+    query = ""
+
+    if request.method == "POST":
+        query = request.form.get("query", "").lower()
+        if os.path.exists("journal_entries.txt"):
+            with open("journal_entries.txt", "r", encoding="utf-8") as f:
+                entries = f.read().strip().split("---")
+                results = [entry for entry in entries if query in entry.lower()]
+
+    return render_template("search.html", results=results, query=query)
 
 if __name__ == "__main__":
     from os import environ
