@@ -131,16 +131,21 @@ def contact():
 def search():
     if "user" not in session:
         return redirect(url_for("login"))
-        
+
     results = []
     query = ""
 
     if request.method == "POST":
         query = request.form.get("query", "").lower()
-        if os.path.exists("journal_entries.txt"):
-            with open("journal_entries.txt", "r", encoding="utf-8") as f:
-                entries = f.read().strip().split("---")
-                results = [entry for entry in entries if query in entry.lower()]
+        files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(".txt")]
+        files.sort(reverse=True)
+
+        for file in files:
+            with open(file, "r", encoding="utf-8") as f:
+                content = f.read()
+                if query in content.lower():
+                    date = file.replace("journal_", "").replace(".txt", "")
+                    results.append(f"📅 {date}:\n{content.strip()}")
 
     return render_template("search.html", results=results, query=query)
 
