@@ -148,7 +148,16 @@ def search():
                     results.append(f"📅 {date}:\n{content.strip()}")
 
     return render_template("search.html", results=results, query=query)
+@app.route("/devotional")
+def devotional():
+    lang = request.args.get("lang", "en")
+    today = datetime.now().strftime("%Y-%m-%d")
+    devo = DEVOTIONS.get(today, {}).get(lang)
 
+    if not devo:
+        return f"<h2>No devotional found for today in {lang.upper()}</h2>"
+
+    return render_template("devotional.html", devo=devo, lang=lang)
 if __name__ == "__main__":
     from os import environ
     app.run(host="0.0.0.0", port=int(environ.get("PORT", 5000)), debug=True)
