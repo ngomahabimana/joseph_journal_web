@@ -1,59 +1,124 @@
 
+/* Reset and base styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #0d1b2a;
-  color: white;
+  font-family: 'Poppins', sans-serif;
+  background: url("/static/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
   margin: 0;
   padding: 2rem;
+  color: #ffffff;
   text-align: center;
+  backdrop-filter: brightness(0.85);
 }
+
 .container {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
   max-width: 800px;
-  margin: auto;
-  text-align: center;
+  margin: 0 auto;
 }
-.photo {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 4px solid white;
-  box-shadow: 0 0 20px white;
-}
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-h2 {
-  font-size: 1.1rem;
-  color: #ccc;
-  margin-bottom: 1rem;
-}
-p, a {
-  font-size: 1.1rem;
-  color: lightgray;
-  text-decoration: none;
-}
-a:hover {
-  color: #38a3a5;
-}
-.info {
-  margin-bottom: 1rem;
-}
-.verse {
-  max-width: 700px;
-  margin: 0.5rem auto;
-  font-size: 1rem;
-  color: lightyellow;
-}
-.lang-buttons button {
-  margin: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: #1e6091;
-  border: none;
-  color: white;
+
+nav {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
   border-radius: 5px;
+  margin-bottom: 2rem;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+button {
+  padding: 0.5rem 1.5rem;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
 }
-.lang-buttons button:hover {
-  background: #38a3a5;
+
+button:hover {
+  background-color: #45a049;
+}
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 1rem;
+  resize: vertical;
+  font-size: 1rem;
+}
+
+pre {
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.about-content {
+  text-align: left;
+}
+
+.author-photo {
+  width: 200px;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+h1, h2, h3 {
+  color: #ffffff;
+  margin-top: 0;
+}
+
+p {
+  color: #f0f0f0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.amazon-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #ff9900;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.amazon-link:hover {
+  background-color: #cc7a00;
 }
