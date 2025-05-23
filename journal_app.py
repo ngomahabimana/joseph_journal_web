@@ -21,11 +21,17 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
+
+        # ✅ Hardcoded credentials (for now)
+        stored_username = "admin"
+        stored_password_hash = "$2b$12$Kp8fPIxp7P8Y0Sl8Y.Ceq.2Tf3r7JZ9GcUN4lhZfLoU5eUsLMsQnO"  # hashed "1234"
+
         if username == stored_username and bcrypt.check_password_hash(stored_password_hash, password):
             session["user"] = username
             return redirect(url_for("journal"))
         else:
             return "Invalid credentials. <a href='/login'>Try again</a>"
+
     return render_template("login.html")
 
 @app.route("/logout")
