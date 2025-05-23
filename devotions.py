@@ -39,6 +39,25 @@ DEVOTIONS = {
             "prayer": "Bwana, nisaidie kukuamini kila siku kama 2025-05-23."
         }
     },
-    ...
+        "2025-05-24": {
+        "en": {
+            "verse": "John 14:6",
+            "text": "Jesus said, 'I am the way, the truth, and the life.'",
+            "reflection": "Only through Jesus can we find true direction and life.",
+            "prayer": "Lord, help me walk in Your truth today."
+        },
+        "fr": {
+            "verse": "Jean 14:6",
+            "text": "Jésus dit: 'Je suis le chemin, la vérité et la vie.'",
+            "reflection": "Seul Jésus peut nous guider vers la vraie vie.",
+            "prayer": "Seigneur, aide-moi à marcher dans Ta vérité aujourd'hui."
+        },
+        "sw": {
+            "verse": "Yohana 14:6",
+            "text": "Yesu alisema: 'Mimi ndimi njia, kweli, na uzima.'",
+            "reflection": "Kupitia Yesu pekee ndipo tunaweza kupata maisha ya kweli.",
+            "prayer": "Bwana, niongoze katika kweli yako leo."
+        }
+    }
 }
 
