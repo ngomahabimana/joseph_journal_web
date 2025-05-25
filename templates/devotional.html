@@ -22,7 +22,7 @@
         <h3>🙏 Prayer:</h3>
         <p>{{ devo["prayer"] }}</p>
     </div>
-<form method="POST" action="{{ url_for('devotional') }}">
+<form action="{{ url_for('submit_devotional') }}" method="POST">
   <input type="hidden" name="date" value="{{ current_date }}">
   <input type="text" name="lang" value="{{ lang }}">
   <input type="text" name="verse" placeholder="Verse">
