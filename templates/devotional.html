@@ -34,7 +34,20 @@
             <a href="/devotional?lang=sw">🇰🇪 Kiswahili</a>
         </p>
 
+        <hr/>
+
+        <h3>💬 Send a message or prayer response</h3>
+        {% if success %}
+            <p style="color: lightgreen;">✅ Message sent successfully!</p>
+        {% endif %}
+        <form method="POST" action="/devotional">
+            <input type="text" name="name" placeholder="Your name" required/><br/><br/>
+            <textarea name="message" rows="4" placeholder="Your message or prayer..." required></textarea><br/>
+            <button type="submit">✉️ Send Message</button>
+        </form>
+
         <p><a href="/">← Back to Home</a></p>
     </div>
 </body>
 </html>
+
