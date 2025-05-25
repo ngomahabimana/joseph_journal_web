@@ -1,53 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <title>Daily Devotion</title>
-    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
+    <meta charset="UTF-8" />
+    <title>Daily Devotional</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <nav>
-        <a href="/">🏠 Home</a>
-        <a href="/entries">📚 View Entries</a>
-        <a href="/search">🔍 Search</a>
-        <a href="/about">ℹ️ About</a>
-        <a href="/contact">✉️ Contact</a>
-    </nav>
+<header>
+    <h1>📖 Daily Devotional</h1>
+    <p>Spiritual strength for {{ lang.upper() }} - {{ devo['verse'] if devo else 'New Message' }}</p>
+</header>
 
-    <div class="container">
-        <h1>🙏 Daily Devotional</h1>
-        <div style="background: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: left;">
-            <h2>📖 Verse: {{ devo.verse }}</h2>
-            <p><em>{{ devo.text }}</em></p>
+<div class="container">
 
-            <h3>🧠 Reflection</h3>
-            <p>{{ devo.reflection }}</p>
-
-            <h3>🙏 Prayer</h3>
-            <p>{{ devo.prayer }}</p>
-        </div>
-
-        <p style="margin-top: 20px;">
-            <a href="/devotional?lang=en">🇬🇧 English</a> |
-            <a href="/devotional?lang=fr">🇫🇷 Français</a> |
-            <a href="/devotional?lang=sw">🇰🇪 Kiswahili</a>
-        </p>
-
-        <hr/>
-
-        <h3>💬 Send a message or prayer response</h3>
-        {% if success %}
-            <p style="color: lightgreen;">✅ Message sent successfully!</p>
-        {% endif %}
-        <form method="POST" action="/devotional">
-            <input type="text" name="name" placeholder="Your name" required/><br/><br/>
-            <textarea name="message" rows="4" placeholder="Your message or prayer..." required></textarea><br/>
-            <button type="submit">✉️ Send Message</button>
-        </form>
-
-        <p><a href="/">← Back to Home</a></p>
+{% if devo %}
+    <div class="devotional-card">
+        <h2>📘 {{ devo["verse"] }}</h2>
+        <p><em>{{ devo["text"] }}</em></p>
+        <h3>🧠 Reflection:</h3>
+        <p>{{ devo["reflection"] }}</p>
+        <h3>🙏 Prayer:</h3>
+        <p>{{ devo["prayer"] }}</p>
     </div>
+
+    <form method="POST">
+        <h3>✉️ Send a Message or Testimony</h3>
+        <input type="text" name="name" placeholder="Your Name" required />
+        <textarea name="message" rows="4" placeholder="Your message to the author..." required></textarea>
+        <button type="submit">Send</button>
+    </form>
+
+    {% if success %}
+    <p style="color: lightgreen; font-weight: bold;">Message sent successfully!</p>
+    {% endif %}
+
+{% else %}
+    <h2>⚠️ No devotional found for today ({{ lang.upper() }}).</h2>
+    <p>Submit one now:</p>
+    <form action="/submit_devotional" method="POST">
+        <input type="text" name="date" value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}" readonly />
+        <select name="lang" required>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="sw">Kiswahili</option>
+        </select><br><br>
+        <input type="text" name="verse" placeholder="Verse (e.g. John 3:16)" required />
+        <input type="text" name="text" placeholder="Verse Text" required />
+        <textarea name="reflection" rows="3" placeholder="Reflection" required></textarea>
+        <textarea name="prayer" rows="3" placeholder="Prayer" required></textarea>
+        <button type="submit">Submit Devotional</button>
+    </form>
+{% endif %}
+
+</div>
+<footer>
+    &copy; 2025 Joseph Habimana Ngoma. All rights reserved.
+</footer>
 </body>
 </html>
-
