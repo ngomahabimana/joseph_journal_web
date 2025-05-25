@@ -104,8 +104,8 @@ def view_by_date():
         content = "No entry found for this date."
     return f"<h2>Journal Entry for {date}</h2><pre>{content}</pre><p><a href='/journal'>Back</a></p>"
 
-@app.route("/devotional", methods=["GET", "POST"])
-def devotional():
+@app.route("/submit_devotional", methods=["POST"])
+def submit_devotional():
     if "user" not in session:
         return redirect(url_for("login"))
 
