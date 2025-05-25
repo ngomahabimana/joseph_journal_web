@@ -22,8 +22,7 @@
         <h3>🙏 Prayer:</h3>
         <p>{{ devo["prayer"] }}</p>
     </div>
-
-    <form method="POST" action="{{ url_for('devotional') }}">
+<form method="POST" action="{{ url_for('devotional') }}">
   <input type="hidden" name="date" value="{{ current_date }}">
   <input type="text" name="lang" value="{{ lang }}">
   <input type="text" name="verse" placeholder="Verse">
@@ -32,6 +31,7 @@
   <textarea name="prayer" placeholder="Prayer"></textarea>
   <button type="submit">Save Devotional</button>
 </form>
+
 
     {% if success %}
     <p style="color: lightgreen; font-weight: bold;">Message sent successfully!</p>
