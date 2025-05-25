@@ -151,7 +151,8 @@ def message():
             f.write(f"[{timestamp}] {name}: {msg}\n")
         success = True
     return render_template("message.html", success=success)
-    @app.route("/message_success")
+
+@app.route("/message_success")
 def message_success():
     return "<h3>Your message has been sent successfully.</h3><p><a href='/message'>Send another</a></p>"
 
