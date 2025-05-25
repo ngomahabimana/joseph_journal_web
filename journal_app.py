@@ -8,7 +8,6 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = "your_secret_key"
 
-# ✅ Credentials
 stored_username = "admin"
 stored_password_hash = "$2b$12$T9LABCAafaSc6FZMwmozLOpilTySRDjIefmgnBFQTcX7IsoPHZGaa"  # hashed "1234"
 
@@ -21,7 +20,6 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-
         if username == stored_username and bcrypt.check_password_hash(stored_password_hash, password):
             session["user"] = username
             return redirect(url_for("journal"))
@@ -137,8 +135,22 @@ def search():
                 content = f.read()
                 if query in content.lower():
                     date = file.replace("journal_", "").replace(".txt", "")
-                    results.append(f"\ud83d\udcc5 {date}:\n{content.strip()}")
+                    results.append(f"📅 {date}:\n{content.strip()}")
     return render_template("search.html", results=results, query=query)
+
+@app.route("/message", methods=["GET", "POST"])
+def message():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    success = False
+    if request.method == "POST":
+        msg = request.form.get("message")
+        name = request.form.get("name")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open("messages.txt", "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] {name}: {msg}\n")
+        success = True
+    return render_template("message.html", success=success)
 
 if __name__ == "__main__":
     from os import environ
