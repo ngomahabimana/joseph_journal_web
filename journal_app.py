@@ -103,48 +103,36 @@ def view_by_date():
         content = "No entry found for this date."
     return f"<h2>Journal Entry for {date}</h2><pre>{content}</pre><p><a href='/journal'>Back</a></p>"
 
-@app.route("/devotional")
+@app.route("/devotional", methods=["GET", "POST"])
 def devotional():
     lang = request.args.get("lang", "en")
     today = datetime.now().strftime("%Y-%m-%d")
+
+    # Load default devotionals
     devo = DEVOTIONS.get(today, {}).get(lang)
+
+    # Load any dynamic devotional overrides from JSON file
+    filename = "dynamic_devotions.json"
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            dynamic = json.load(f)
+            if today in dynamic and lang in dynamic[today]:
+                devo = dynamic[today][lang]
+
+    success = False
+    if request.method == "POST":
+        name = request.form.get("name")
+        message = request.form.get("message")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open("devotional_messages.txt", "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] From {name}: {message}\n")
+        success = True
+
     if not devo:
         return f"<h2>No devotional found for today in {lang.upper()}</h2>"
-    return render_template("devotional.html", devo=devo, lang=lang)
 
-@app.route("/submit_devotional", methods=["GET", "POST"])
-def submit_devotional():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    if request.method == "POST":
-        date = request.form["date"]
-        lang = request.form["lang"]
-        verse = request.form["verse"]
-        text = request.form["text"]
-        reflection = request.form["reflection"]
-        prayer = request.form["prayer"]
-
-        filename = "dynamic_devotions.json"
-        if os.path.exists(filename):
-            with open(filename, "r", encoding="utf-8") as f:
-                data = json.load(f)
-        else:
-            data = {}
-
-        data.setdefault(date, {})[lang] = {
-            "verse": verse,
-            "text": text,
-            "reflection": reflection,
-            "prayer": prayer
-        }
-
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-
-        return "Devotional submitted successfully! <a href='/submit_devotional'>Submit another</a>"
-
-    return render_template("submit_devotional.html")
-
+    return render_template("devotional.html", devo=devo, lang=lang, success=success)
+    
 @app.route("/about")
 def about():
     return render_template("about.html")
