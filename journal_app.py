@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from datetime import datetime
 import os
+import json
 from devotions import DEVOTIONS
 from flask_bcrypt import Bcrypt
 
@@ -105,34 +106,68 @@ def view_by_date():
 
 @app.route("/devotional", methods=["GET", "POST"])
 def devotional():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
     lang = request.args.get("lang", "en")
     today = datetime.now().strftime("%Y-%m-%d")
-
-    # Load default devotionals
-    devo = DEVOTIONS.get(today, {}).get(lang)
-
-    # Load any dynamic devotional overrides from JSON file
     filename = "dynamic_devotions.json"
+    messages_filename = f"devotional_messages_{today}.json"
+
+    # Load devotion
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
-            dynamic = json.load(f)
-            if today in dynamic and lang in dynamic[today]:
-                devo = dynamic[today][lang]
+            data = json.load(f)
+        devo = data.get(today, {}).get(lang)
+    else:
+        devo = None
 
-    success = False
+    # Handle message submission
+    messages = []
     if request.method == "POST":
-        name = request.form.get("name")
-        message = request.form.get("message")
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open("devotional_messages.txt", "a", encoding="utf-8") as f:
-            f.write(f"[{timestamp}] From {name}: {message}\n")
-        success = True
+        if "message" in request.form:
+            name = request.form.get("name")
+            message = request.form.get("message")
+            entry = {
+                "name": name,
+                "message": message,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            if os.path.exists(messages_filename):
+                with open(messages_filename, "r", encoding="utf-8") as f:
+                    messages = json.load(f)
+            messages.append(entry)
+            with open(messages_filename, "w", encoding="utf-8") as f:
+                json.dump(messages, f, ensure_ascii=False, indent=2)
+        elif "verse" in request.form:
+            # Admin is submitting new devotional
+            date = request.form["date"]
+            lang = request.form["lang"]
+            verse = request.form["verse"]
+            text = request.form["text"]
+            reflection = request.form["reflection"]
+            prayer = request.form["prayer"]
+            if os.path.exists(filename):
+                with open(filename, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            else:
+                data = {}
+            data.setdefault(date, {})[lang] = {
+                "verse": verse,
+                "text": text,
+                "reflection": reflection,
+                "prayer": prayer
+            }
+            with open(filename, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            return redirect(url_for("devotional", lang=lang))
 
-    if not devo:
-        return f"<h2>No devotional found for today in {lang.upper()}</h2>"
+    if os.path.exists(messages_filename):
+        with open(messages_filename, "r", encoding="utf-8") as f:
+            messages = json.load(f)
 
-    return render_template("devotional.html", devo=devo, lang=lang, success=success)
-    
+    return render_template("devotional.html", devo=devo, messages=messages, lang=lang)
+
 @app.route("/about")
 def about():
     return render_template("about.html")
