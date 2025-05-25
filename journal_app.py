@@ -166,7 +166,8 @@ def devotional():
         with open(messages_filename, "r", encoding="utf-8") as f:
             messages = json.load(f)
 
-    return render_template("devotional.html", devo=devo, messages=messages, lang=lang)
+    current_date = datetime.utcnow().strftime("%Y-%m-%d")
+return render_template("devotional.html", devo=devo, messages=messages, lang=lang, current_date=current_date)
 
 @app.route("/about")
 def about():
