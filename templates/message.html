@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Send a Message</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>📨 Send a Message or Preaching</h1>
+    <p>Let your words inspire and uplift others</p>
+    <form method="POST">
+      <textarea name="message" placeholder="Write your message here..." required rows="8"></textarea>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+    {% if success %}
+      <p style="color: lightgreen; margin-top: 1rem;">✅ Message submitted successfully!</p>
+    {% endif %}
+    <a href="/">← Back to Home</a>
+  </div>
+</body>
+</html>
