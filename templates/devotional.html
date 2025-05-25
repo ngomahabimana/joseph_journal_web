@@ -38,7 +38,7 @@
     <h2>⚠️ No devotional found for today ({{ lang.upper() }}).</h2>
     <p>Submit one now:</p>
     <form action="/submit_devotional" method="POST">
-        <input type="text" name="date" value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}" readonly />
+        <input type="text" name="date" value="{{ current_date }}" readonly />
         <select name="lang" required>
             <option value="en">English</option>
             <option value="fr">Français</option>
