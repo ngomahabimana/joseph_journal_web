@@ -75,6 +75,21 @@ def entries():
         with open(file, "r", encoding="utf-8") as f:
             all_entries[file.replace("journal_", "").replace(".txt", "")] = f.read()
     return render_template("entries.html", entries=all_entries)
+@app.route("/view_by_date")
+def view_by_date():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    date = request.args.get("date")
+    filename = f"journal_{date}.txt"
+
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read()
+    else:
+        content = "No entry found for this date."
+
+    return render_template("view_entry.html", date=date, content=content)
 
 @app.route("/export")
 def export():
