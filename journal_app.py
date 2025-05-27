@@ -87,21 +87,41 @@ def clear():
         flash("⚠️ No entry found for today.")
     return redirect(url_for("journal"))
 
-@app.route("/export")
-def export():
+@app.route("/export_pdf")
+def export_pdf():
     if "user" not in session:
         return redirect(url_for("login"))
+
     files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(".txt")]
     files.sort()
-    content = ""
+
+    pdf_path = "journal_export.pdf"
+    c = canvas.Canvas(pdf_path, pagesize=LETTER)
+    width, height = LETTER
+    y = height - 50
+
     for file in files:
         with open(file, "r", encoding="utf-8") as f:
-            content += f"--- {file} ---\n"
-            content += f.read() + "\n\n"
-    flash("✅ All journal entries exported successfully.")
-    response = app.response_class(response=content, status=200, mimetype='text/plain')
-    response.headers["Content-Disposition"] = "attachment; filename=journal_export.txt"
-    return response
+            date = file.replace("journal_", "").replace(".txt", "")
+            c.setFont("Helvetica-Bold", 14)
+            c.drawString(50, y, f"📅 {date}")
+            y -= 20
+
+            c.setFont("Helvetica", 12)
+            for line in f.readlines():
+                for segment in line.strip().split("\n"):
+                    if y < 50:
+                        c.showPage()
+                        y = height - 50
+                    c.drawString(50, y, segment)
+                    y -= 15
+
+            y -= 30  # Space between entries
+
+    c.save()
+
+    flash("✅ Journal PDF exported successfully.")
+    return redirect(url_for("journal"))
 
 @app.route("/view_by_date")
 def view_by_date():
