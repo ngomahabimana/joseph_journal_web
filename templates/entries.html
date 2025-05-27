@@ -14,12 +14,21 @@
 
     <h1>📚 All Journal Entries</h1>
 
-    {% for entry in entries %}
-        <div style="background-color: #fff; padding: 20px; margin: 20px auto; width: 80%; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-            <pre style="text-align: left;">{{ entry }}</pre>
-        </div>
-    {% endfor %}
+    {% if entries %}
+        <ul style="list-style-type: none; padding: 0;">
+            {% for date, content in entries.items() %}
+                <li style="margin-bottom: 1rem;">
+                    <a href="{{ url_for('view_by_date') }}?date={{ date }}" style="font-weight: bold; font-size: 1.1rem;">
+                        📅 {{ date }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No journal entries found.</p>
+    {% endif %}
 
     <p><a href="/">← Back to Home</a></p>
 </body>
 </html>
+
