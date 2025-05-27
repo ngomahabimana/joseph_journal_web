@@ -14,7 +14,15 @@ stored_password_hash = "$2b$12$T9LABCAafaSc6FZMwmozLOpilTySRDjIefmgnBFQTcX7IsoPH
 
 @app.route("/", methods=["GET"])
 def home():
-    return render_template("index.html")
+    lang = request.args.get("lang", "en")
+    today = datetime.now().strftime("%Y-%m-%d")
+    filename = "dynamic_devotions.json"
+    devo = None
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        devo = data.get(today, {}).get(lang)
+    return render_template("index.html", devo=devo, lang=lang)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -33,19 +41,10 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-@app.route("/journal", methods=["GET", "POST"])
+@app.route("/journal", methods=["GET"])
 def journal():
     if "user" not in session:
         return redirect(url_for("login"))
-
-    if request.method == "POST":
-        entry = request.form.get("entry")
-        date_str = datetime.now().strftime("%Y-%m-%d")
-        filename = f"journal_{date_str}.txt"
-        with open(filename, "a", encoding="utf-8") as f:
-            f.write(entry + "\n\n")
-        return "Your entry has been saved! <a href='/journal'>Back to journal</a>"
-
     lang = request.args.get("lang", "en")
     return render_template("journal.html", lang=lang)
 
@@ -60,6 +59,20 @@ def submit():
         f.write(entry + "\n\n")
     return "Your entry has been saved! <a href='/journal'>Back to journal</a>"
 
+@app.route("/entries")
+def entries():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(".txt")]
+    files.sort(reverse=True)
+    all_entries = {}
+    for file in files:
+        with open(file, "r", encoding="utf-8") as f:
+            date = file.replace("journal_", "").replace(".txt", "")
+            content = f.read()
+            all_entries[date] = content
+    return render_template("entries.html", entries=all_entries)
+
 @app.route("/clear", methods=["POST"])
 def clear():
     if "user" not in session:
@@ -72,33 +85,6 @@ def clear():
     else:
         message = "No entry found for today."
     return f"<h3>{message}</h3><p><a href='/journal'>Back to Journal</a></p>"
-
-@app.route("/entries")
-def entries():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(".txt")]
-    files.sort(reverse=True)
-    all_entries = {}
-    for file in files:
-        with open(file, "r", encoding="utf-8") as f:
-            all_entries[file.replace("journal_", "").replace(".txt", "")] = f.read()
-    return render_template("entries.html", entries=all_entries)
-@app.route("/view_by_date")
-def view_entry_by_date(): 
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    date = request.args.get("date")
-    filename = f"journal_{date}.txt"
-
-    if os.path.exists(filename):
-        with open(filename, "r", encoding="utf-8") as f:
-            content = f.read()
-    else:
-        content = "No entry found for this date."
-
-    return render_template("view_entry.html", date=date, content=content)
 
 @app.route("/export")
 def export():
@@ -138,16 +124,17 @@ def devotional():
     filename = "dynamic_devotions.json"
     messages_filename = f"devotional_messages_{today}.json"
 
-    # Load devotion
+    devo = None
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
         devo = data.get(today, {}).get(lang)
-    else:
-        devo = None
 
-    # Handle message submission
     messages = []
+    if os.path.exists(messages_filename):
+        with open(messages_filename, "r", encoding="utf-8") as f:
+            messages = json.load(f)
+
     if request.method == "POST":
         if "message" in request.form:
             name = request.form.get("name")
@@ -157,16 +144,9 @@ def devotional():
                 "message": message,
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
-            if os.path.exists(messages_filename):
-                with open(messages_filename, "r", encoding="utf-8") as f:
-                    messages = json.load(f)
             messages.append(entry)
             with open(messages_filename, "w", encoding="utf-8") as f:
                 json.dump(messages, f, ensure_ascii=False, indent=2)
-
-    if os.path.exists(messages_filename):
-        with open(messages_filename, "r", encoding="utf-8") as f:
-            messages = json.load(f)
 
     current_date = datetime.utcnow().strftime("%Y-%m-%d")
     return render_template("devotional.html", devo=devo, messages=messages, lang=lang, current_date=current_date)
