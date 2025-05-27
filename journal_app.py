@@ -1,5 +1,6 @@
-from flask import flash
-from flask import Flask, render_template, request, redirect, session, url_for
+from reportlab.lib.pagesizes import LETTER
+from reportlab.pdfgen import canvas
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from datetime import datetime
 import os
 import json
@@ -135,7 +136,7 @@ def view_by_date():
     else:
         content = "No entry found for this date."
     return f"<h2>Journal Entry for {date}</h2><pre>{content}</pre><p><a href='/journal'>Back</a></p>"
-
+    
 @app.route("/devotional", methods=["GET", "POST"])
 def devotional():
     if "user" not in session:
