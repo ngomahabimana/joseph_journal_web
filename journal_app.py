@@ -104,8 +104,8 @@ def view_by_date():
         content = "No entry found for this date."
     return f"<h2>Journal Entry for {date}</h2><pre>{content}</pre><p><a href='/journal'>Back</a></p>"
 
-@app.route("/submit_devotional", methods=["POST"])
-def submit_devotional():
+@app.route("/devotional", methods=["GET", "POST"])
+def devotional():
     if "user" not in session:
         return redirect(url_for("login"))
 
@@ -139,28 +139,6 @@ def submit_devotional():
             messages.append(entry)
             with open(messages_filename, "w", encoding="utf-8") as f:
                 json.dump(messages, f, ensure_ascii=False, indent=2)
-        elif "verse" in request.form:
-            # Admin is submitting new devotional
-            date = request.form["date"]
-            lang = request.form["lang"]
-            verse = request.form["verse"]
-            text = request.form["text"]
-            reflection = request.form["reflection"]
-            prayer = request.form["prayer"]
-            if os.path.exists(filename):
-                with open(filename, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-            else:
-                data = {}
-            data.setdefault(date, {})[lang] = {
-                "verse": verse,
-                "text": text,
-                "reflection": reflection,
-                "prayer": prayer
-            }
-            with open(filename, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-            return redirect(url_for("devotional", lang=lang))
 
     if os.path.exists(messages_filename):
         with open(messages_filename, "r", encoding="utf-8") as f:
@@ -168,6 +146,38 @@ def submit_devotional():
 
     current_date = datetime.utcnow().strftime("%Y-%m-%d")
     return render_template("devotional.html", devo=devo, messages=messages, lang=lang, current_date=current_date)
+
+@app.route("/submit_devotional", methods=["POST"])
+def submit_devotional():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    date = request.form["date"]
+    lang = request.form["lang"]
+    verse = request.form["verse"]
+    text = request.form["text"]
+    reflection = request.form["reflection"]
+    prayer = request.form["prayer"]
+
+    filename = "dynamic_devotions.json"
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = {}
+
+    data.setdefault(date, {})[lang] = {
+        "verse": verse,
+        "text": text,
+        "reflection": reflection,
+        "prayer": prayer
+    }
+
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return redirect(url_for("devotional", lang=lang))
+
 @app.route("/about")
 def about():
     return render_template("about.html")
