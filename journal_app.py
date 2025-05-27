@@ -1,3 +1,4 @@
+from flask import flash
 from flask import Flask, render_template, request, redirect, session, url_for
 from datetime import datetime
 import os
@@ -81,10 +82,10 @@ def clear():
     filename = f"journal_{date_str}.txt"
     if os.path.exists(filename):
         os.remove(filename)
-        message = "Today's journal entry has been cleared."
+        flash("🗑️ Today's journal entry has been cleared.")
     else:
-        message = "No entry found for today."
-    return f"<h3>{message}</h3><p><a href='/journal'>Back to Journal</a></p>"
+        flash("⚠️ No entry found for today.")
+    return redirect(url_for("journal"))
 
 @app.route("/export")
 def export():
@@ -97,6 +98,7 @@ def export():
         with open(file, "r", encoding="utf-8") as f:
             content += f"--- {file} ---\n"
             content += f.read() + "\n\n"
+    flash("✅ All journal entries exported successfully.")
     response = app.response_class(response=content, status=200, mimetype='text/plain')
     response.headers["Content-Disposition"] = "attachment; filename=journal_export.txt"
     return response
