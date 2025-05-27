@@ -1,21 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Journal Entry - {{ date }}</title>
-    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <title>📖 Journal Entry - {{ date }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+        nav a {
+            color: #ecf0f1;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .entry-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .entry-container h1 {
+            font-size: 1.8em;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+        .entry-container p {
+            font-size: 1.15em;
+            color: #2c3e50;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+
     <nav>
-        <a href="/">🏠 Home</a> |
-        <a href="/entries">📚 View Entries</a> |
+        <a href="/">🏠 Home</a>
+        <a href="/entries">📚 All Entries</a>
         <a href="/search">🔍 Search</a>
+        <a href="/new">📝 New Entry</a>
     </nav>
 
-    <div class="container">
-        <h2>📅 Journal Entry for {{ date }}</h2>
-        <pre>{{ content }}</pre>
-        <p><a href="/entries">← Back to All Entries</a></p>
+    <div class="entry-container">
+        <h1>📅 Journal Entry for {{ date }}</h1>
+        <p>{{ content }}</p>
+        <a class="back-link" href="/entries">← Back to All Entries</a>
     </div>
+
 </body>
 </html>
+
 
