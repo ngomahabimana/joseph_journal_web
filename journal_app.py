@@ -76,7 +76,7 @@ def entries():
             all_entries[file.replace("journal_", "").replace(".txt", "")] = f.read()
     return render_template("entries.html", entries=all_entries)
 @app.route("/view_by_date")
-def view_by_date():
+def view_entry_by_date(): 
     if "user" not in session:
         return redirect(url_for("login"))
 
