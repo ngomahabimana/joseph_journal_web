@@ -33,10 +33,19 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-@app.route("/journal", methods=["GET"])
+@app.route("/journal", methods=["GET", "POST"])
 def journal():
     if "user" not in session:
         return redirect(url_for("login"))
+
+    if request.method == "POST":
+        entry = request.form.get("entry")
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        filename = f"journal_{date_str}.txt"
+        with open(filename, "a", encoding="utf-8") as f:
+            f.write(entry + "\n\n")
+        return "Your entry has been saved! <a href='/journal'>Back to journal</a>"
+
     lang = request.args.get("lang", "en")
     return render_template("journal.html", lang=lang)
 
