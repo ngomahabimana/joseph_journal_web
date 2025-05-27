@@ -1,6 +1,6 @@
 from reportlab.lib.pagesizes import LETTER
 from reportlab.pdfgen import canvas
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, send_file
 from datetime import datetime
 import os
 import json
@@ -48,7 +48,13 @@ def journal():
     if "user" not in session:
         return redirect(url_for("login"))
     lang = request.args.get("lang", "en")
-    return render_template("journal.html", lang=lang)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    filename = f"journal_{date_str}.txt"
+    content = ""
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read()
+    return render_template("journal.html", lang=lang, entry=content)
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -57,9 +63,9 @@ def submit():
     entry = request.form.get("entry")
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"journal_{date_str}.txt"
-    with open(filename, "a", encoding="utf-8") as f:
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(entry + "\n\n")
-    return "Your entry has been saved! <a href='/journal'>Back to journal</a>"
+    return "Your entry has been updated! <a href='/journal'>Back to journal</a>"
 
 @app.route("/entries")
 def entries():
@@ -121,8 +127,7 @@ def export_pdf():
 
     c.save()
 
-    flash("✅ Journal PDF exported successfully.")
-    return redirect(url_for("journal"))
+    return send_file(pdf_path, as_attachment=True)
 
 @app.route("/view_by_date")
 def view_by_date():
