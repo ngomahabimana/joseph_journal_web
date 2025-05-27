@@ -1,57 +1,67 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Journal | Joseph Ngoma</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
-
-<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/></head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Journal | Joseph Ngoma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+</head>
 <body>
-<header>
-<h1>Daily Journal</h1>
-<p>Let your words be your offering</p>
-</header>
-<div class="container">
-<div class="verse-box">
-<strong>Verse of the Day:</strong>
-<p>{{ verse }}</p>
-</div>
-<div class="devotional-box">
-<strong>Devotional Thought:</strong>
-<p>{{ devotional }}</p>
-</div>
-<form method="POST">
-    <h2>Write Today’s Entry</h2>
-    <textarea name="entry" placeholder="Dear Lord, today I..." required rows="6"></textarea><br/>
-    <button type="submit">Save Entry</button>
-</form>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul style="color: green;">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 
-<!-- Display flash messages -->
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <ul>
-    {% for message in messages %}
-        <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
-{% endwith %}
+  <header>
+    <h1>Daily Journal</h1>
+    <p>Let your words be your offering</p>
+  </header>
 
-<h2>Previous Entries</h2>
-{% for entry in entries %}
-    <div class="entry">
-        <pre>{{ entry }}</pre>
+  <div class="container">
+    <div class="verse-box">
+      <strong>Verse of the Day:</strong>
+      <p>{{ verse }}</p>
     </div>
-{% endfor %}
 
-<!-- Only keep this one clear form -->
-<form action="{{ url_for('clear') }}" method="POST">
-    <button type="submit">🗑️ Clear Today's Entry</button>
-</form>
-</div>
-<footer>
+    <div class="devotional-box">
+      <strong>Devotional Thought:</strong>
+      <p>{{ devotional }}</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('submit') }}">
+      <h2>Write Today’s Entry</h2>
+      <textarea name="entry" placeholder="Dear Lord, today I..." required rows="6"></textarea><br />
+      <button type="submit">💾 Save Entry</button>
+    </form>
+
+    <h2>📖 Previous Entries</h2>
+    {% for entry in entries %}
+      <div class="entry">
+        <pre>{{ entry }}</pre>
+      </div>
+    {% endfor %}
+
+    <form action="{{ url_for('clear') }}" method="POST">
+      <button type="submit">🗑️ Clear Today's Entry</button>
+    </form>
+
+    <form action="{{ url_for('export') }}" method="GET">
+      <button type="submit">⬇️ Export All as PDF</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; {{ current_year }} Joseph Ngoma. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+
         © 2025 Joseph Habimana Ngoma. All rights reserved.
     </footer>
 </body>
