@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Journal Entry - {{ date }}</title>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <nav>
+        <a href="/">🏠 Home</a> |
+        <a href="/entries">📚 View Entries</a> |
+        <a href="/search">🔍 Search</a>
+    </nav>
+
+    <div class="container">
+        <h2>📅 Journal Entry for {{ date }}</h2>
+        <pre>{{ content }}</pre>
+        <p><a href="/entries">← Back to All Entries</a></p>
+    </div>
+</body>
+</html>
+
