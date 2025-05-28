@@ -1,41 +1,46 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Joseph's Journal</title>
-    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<title>Joseph's Journal</title>
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
-    <nav>
-        <a href="/">🏠 Home</a>
-        <a href="/entries">📚 View Entries</a>
-        <a href="/search">🔍 Search</a>
-        <a href="/devotional">📖 Devotionals</a>
-        <a href="/about">ℹ️ About</a>
-        <a href="/contact">✉️ Contact</a>
-        <a href="/message">✉️ Send a Message</a>
-    </nav>
-
-    <div class="container">
-        <h1>📖 Welcome to Joseph's Journal</h1>
-        <p>This is your sacred space to reflect, record, and grow in faith. Here you can:</p>
-        <ul>
-            <li>✍️ Write daily journal entries</li>
-            <li>📚 Review your past entries</li>
-            <li>🔍 Search for inspiration in your writings</li>
-            <li>📖 Read daily devotionals</li>
-        </ul>
-
-        <h3>📘 Today's Verse</h3>
-        <p><strong>{{ verse }}</strong></p>
-
-        <h4>🕊️ Devotional Thought</h4>
-        <p>{{ devotional }}</p>
-
-        <form action="/submit" method="POST" style="margin-top: 30px;">
-            <textarea name="entry" rows="6" cols="60" placeholder="Write your journal entry here..." required></textarea><br>
-            <button type="submit">Save Entry</button>
-        </form>
-    </div>
+<form action="" method="get" style="margin-bottom: 15px;">
+<label for="lang">🌐 Language:</label>
+<select id="lang" name="lang" onchange="this.form.submit()">
+<option %}="" %}selected{%="" endif="" if="" lang="en" value="en" {%="">English</option>
+<option %}="" %}selected{%="" endif="" if="" lang="fr" value="fr" {%="">Français</option>
+<option %}="" %}selected{%="" endif="" if="" lang="sw" value="sw" {%="">Kiswahili</option>
+</select>
+</form>
+<nav>
+<a href="/">🏠 Home</a>
+<a href="/entries">📚 View Entries</a>
+<a href="/search">🔍 Search</a>
+<a href="/devotional">📖 Devotionals</a>
+<a href="/about">ℹ️ About</a>
+<a href="/contact">✉️ Contact</a>
+<a href="/message">✉️ Send a Message</a>
+</nav>
+<div class="container">
+<h1>{% if lang == 'fr' %}📖 Bienvenue dans le Journal de Joseph{% elif lang == 'sw' %}📖 Karibu kwenye Jarida la Joseph{% else %}📖 Welcome to Joseph's Journal{% endif %}</h1>
+<p>{% if lang == 'fr' %}C'est votre espace sacré pour réfléchir, écrire et grandir dans la foi. Ici, vous pouvez :{% elif lang == 'sw' %}Hii ni nafasi yako takatifu ya kutafakari, kuandika, na kukua katika imani. Hapa unaweza:{% else %}This is your sacred space to reflect, record, and grow in faith. Here you can:{% endif %}</p>
+<ul>
+<li>{% if lang == 'fr' %}✍️ Écrire des entrées quotidiennes{% elif lang == 'sw' %}✍️ Andika maandishi ya kila siku{% else %}✍️ Write daily journal entries{% endif %}</li>
+<li>{% if lang == 'fr' %}📚 Relire vos anciennes entrées{% elif lang == 'sw' %}📚 Pitia maandishi yako ya awali{% else %}📚 Review your past entries{% endif %}</li>
+<li>{% if lang == 'fr' %}🔍 Recherchez l'inspiration dans vos écrits{% elif lang == 'sw' %}🔍 Tafuta msukumo kwenye maandishi yako{% else %}🔍 Search for inspiration in your writings{% endif %}</li>
+<li>{% if lang == 'fr' %}📖 Lire les méditations quotidiennes{% elif lang == 'sw' %}📖 Soma mafundisho ya kila siku{% else %}📖 Read daily devotionals{% endif %}</li>
+</ul>
+<h3>📘 Today's Verse</h3>
+<p><strong>{{ verse }}</strong></p>
+<h4>🕊️ Devotional Thought</h4>
+<p>{{ devotional }}</p>
+<form action="/submit" method="POST" style="margin-top: 30px;">
+<textarea cols="60" name="entry" placeholder="Write your journal entry here..." required="" rows="6"></textarea><br/>
+<button type="submit">Save Entry</button>
+</form>
+</div>
 </body>
 </html>
