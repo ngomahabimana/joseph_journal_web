@@ -131,3 +131,42 @@ p {
 .amazon-link:hover {
   background-color: #cc7a00;
 }
+
+/* Language selector dropdown */
+form select[name="lang"] {
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+}
+
+form select[name="lang"]:hover {
+  background-color: #f0f0f0;
+}
+
+/* Adjust label visibility on dark backgrounds */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+/* Responsive improvement */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+
+  textarea {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+}
