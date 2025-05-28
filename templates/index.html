@@ -6,13 +6,13 @@
 <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
-<form action="" method="get" style="margin-bottom: 15px;">
-<label for="lang">🌐 Language:</label>
-<select id="lang" name="lang" onchange="this.form.submit()">
-<option %}="" %}selected{%="" endif="" if="" lang="en" value="en" {%="">English</option>
-<option %}="" %}selected{%="" endif="" if="" lang="fr" value="fr" {%="">Français</option>
-<option %}="" %}selected{%="" endif="" if="" lang="sw" value="sw" {%="">Kiswahili</option>
-</select>
+<form method="get" action="" style="margin-bottom: 15px;">
+  <label for="lang">🌐 Language:</label>
+  <select name="lang" id="lang" onchange="this.form.submit()">
+    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+    <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+    <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
+  </select>
 </form>
 <nav>
 <a href="/">🏠 Home</a>
