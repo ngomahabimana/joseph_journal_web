@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>Search Journal</title>
+    <title>{% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search Journal{% endif %}</title>
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <nav style="margin-bottom: 20px;">
-        <a href="/">🏠 Home</a> |
-        <a href="/entries">📚 View Entries</a> |
-        <a href="/search">🔍 Search</a>
+        <a href="/">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a> |
+        <a href="/entries">📚 {% if lang == 'fr' %}Voir les entrées{% elif lang == 'sw' %}Maandishi Yaliyopita{% else %}View Entries{% endif %}</a> |
+        <a href="/search">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
     </nav>
 
-    <h1>🔍 Search Journal Entries</h1>
-    <p>Find past thoughts, prayers, and inspiration</p>
+    <h1>🔍 {% if lang == 'fr' %}Rechercher dans le journal{% elif lang == 'sw' %}Tafuta Maandishi{% else %}Search Journal Entries{% endif %}</h1>
+    <p>{% if lang == 'fr' %}Trouvez des pensées, des prières et de l'inspiration passées{% elif lang == 'sw' %}Tafuta mawazo, sala, na msukumo wa zamani{% else %}Find past thoughts, prayers, and inspiration{% endif %}</p>
 
     <form method="POST">
-        <input name="query" placeholder="Type a keyword..." required>
-        <button type="submit">Search</button>
+        <input name="query" placeholder="{% if lang == 'fr' %}Tapez un mot-clé...{% elif lang == 'sw' %}Andika neno kuu...{% else %}Type a keyword...{% endif %}" required>
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <button type="submit">{% if lang == 'fr' %}Chercher{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</button>
     </form>
 
     {% if query %}
-        <h3>Results for "{{ query }}":</h3>
+        <h3>{% if lang == 'fr' %}Résultats pour{% elif lang == 'sw' %}Matokeo kwa{% else %}Results for{% endif %} "{{ query }}":</h3>
         {% if results %}
             {% for result in results %}
                 <div style="margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc;">
@@ -30,11 +31,11 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p>No results found for your search.</p>
+            <p>{% if lang == 'fr' %}Aucun résultat trouvé{% elif lang == 'sw' %}Hakuna matokeo yaliyopatikana{% else %}No results found for your search.{% endif %}</p>
         {% endif %}
     {% endif %}
 
     <br>
-    <a href="/">← Back to Home</a>
+    <a href="/">← {% if lang == 'fr' %}Retour à l'accueil{% elif lang == 'sw' %}Rudi Nyumbani{% else %}Back to Home{% endif %}</a>
 </body>
 </html>
