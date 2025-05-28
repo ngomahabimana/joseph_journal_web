@@ -14,6 +14,24 @@ app.secret_key = "your_secret_key"
 stored_username = "admin"
 stored_password_hash = "$2b$12$T9LABCAafaSc6FZMwmozLOpilTySRDjIefmgnBFQTcX7IsoPHZGaa"  # hashed "1234"
 
+messages = {
+    "saved": {
+        "en": "Your journal entry has been saved.",
+        "fr": "Votre journal a été enregistré.",
+        "sw": "Maandishi yako yamehifadhiwa."
+    },
+    "cleared": {
+        "en": "🗑️ Today's journal entry has been cleared.",
+        "fr": "🗑️ L'entrée d'aujourd'hui a été supprimée.",
+        "sw": "🗑️ Maandishi ya leo yamefutwa."
+    },
+    "not_found": {
+        "en": "⚠️ No entry found for today.",
+        "fr": "⚠️ Aucune entrée trouvée pour aujourd'hui.",
+        "sw": "⚠️ Hakuna maandishi yaliyopatikana leo."
+    }
+}
+
 @app.route("/", methods=["GET"])
 def home():
     lang = request.args.get("lang", "en")
@@ -61,13 +79,13 @@ def journal():
 def submit():
     if "user" not in session:
         return redirect(url_for("login"))
-    entry = request.form.get("entry")
     lang = request.args.get("lang", "en")
+    entry = request.form.get("entry")
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"journal_{date_str}_{lang}.txt"
     with open(filename, "w", encoding="utf-8") as f:
         f.write(entry.strip() + "\n")
-    flash("Your journal entry has been saved.")
+    flash(messages["saved"].get(lang, messages["saved"]["en"]))
     return redirect(url_for("journal", lang=lang))
 
 @app.route("/entries")
@@ -94,9 +112,9 @@ def clear():
     filename = f"journal_{date_str}_{lang}.txt"
     if os.path.exists(filename):
         os.remove(filename)
-        flash("🗑️ Today's journal entry has been cleared.")
+        flash(messages["cleared"].get(lang, messages["cleared"]["en"]))
     else:
-        flash("⚠️ No entry found for today.")
+        flash(messages["not_found"].get(lang, messages["not_found"]["en"]))
     return redirect(url_for("journal", lang=lang))
 
 @app.route("/export_pdf")
@@ -130,10 +148,9 @@ def export_pdf():
                     c.drawString(50, y, line)
                     y -= 15
 
-            y -= 30  # Space between entries
+            y -= 30
 
     c.save()
-
     return send_file(pdf_path, as_attachment=True)
 
 @app.route("/view_by_date")
