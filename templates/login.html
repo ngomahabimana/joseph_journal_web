@@ -1,26 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ lang }}">
 <head>
-<title>Login</title>
-<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/></head>
+  <meta charset="UTF-8">
+  <title>{% if lang == 'fr' %}Connexion{% elif lang == 'sw' %}Ingia{% else %}Login{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-<form method="get" action="" style="margin-bottom: 15px;">
+
+<h1>{% if lang == 'fr' %}Connexion{% elif lang == 'sw' %}Ingia{% else %}Login{% endif %}</h1>
+
+<form method="post" action="{{ url_for('login') }}">
+  <label for="username">{% if lang == 'fr' %}Nom d'utilisateur{% elif lang == 'sw' %}Jina la mtumiaji{% else %}Username{% endif %}:</label><br>
+  <input type="text" id="username" name="username"><br><br>
+
+  <label for="password">{% if lang == 'fr' %}Mot de passe{% elif lang == 'sw' %}Nenosiri{% else %}Password{% endif %}:</label><br>
+  <input type="password" id="password" name="password"><br><br>
+
+  <button type="submit">🔓 {% if lang == 'fr' %}Se connecter{% elif lang == 'sw' %}Ingia{% else %}Login{% endif %}</button>
+</form>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="color: red;">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<!-- Language Selector -->
+<form method="get" action="{{ url_for('login') }}" style="margin-top: 20px;">
   <label for="lang">🌐 Language:</label>
   <select name="lang" id="lang" onchange="this.form.submit()">
     <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
     <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
     <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
+    <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
+    <option value="zh" {% if lang == 'zh' %}selected{% endif %}>中文</option>
+    <option value="hi" {% if lang == 'hi' %}selected{% endif %}>हिन्दी</option>
   </select>
 </form>
-<p class="welcome">Welcome to Joseph Ngoma’s Journal App — a place for reflection, inspiration, and spiritual growth. If you're new, feel free to explore the daily devotionals or contact us for more info.</p>
-<h2>{% if lang == 'fr' %}🔐 Connectez-vous pour accéder à votre journal{% elif lang == 'sw' %}🔐 Ingia ili kufikia jarida lako{% else %}🔐 Login to Access Your Journal{% endif %}</h2>
-<form method="POST">
-<label>Username:</label><br/>
-<input name="username" type="text"/><br/><br/>
-<label>Password:</label><br/>
-<input name="password" type="password"/><br/><br/>
-<button type="submit">Login</button>
-</form>
+
 </body>
 </html>
+
 
