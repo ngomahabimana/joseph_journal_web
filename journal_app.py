@@ -1,4 +1,3 @@
-from translations import translations
 from reportlab.lib.pagesizes import LETTER
 from reportlab.pdfgen import canvas
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_file
@@ -15,52 +14,17 @@ app.secret_key = "your_secret_key"
 stored_username = "admin"
 stored_password_hash = "$2b$12$T9LABCAafaSc6FZMwmozLOpilTySRDjIefmgnBFQTcX7IsoPHZGaa"  # hashed "1234"
 
-messages = {
-    "saved": {
-        "en": "Your journal entry has been saved.",
-        "fr": "Votre journal a été enregistré.",
-        "sw": "Maandishi yako yamehifadhiwa."
-    },
-    "cleared": {
-        "en": "🗑️ Today's journal entry has been cleared.",
-        "fr": "🗑️ L'entrée d'aujourd'hui a été supprimée.",
-        "sw": "🗑️ Maandishi ya leo yamefutwa."
-    },
-    "not_found": {
-        "en": "⚠️ No entry found for today.",
-        "fr": "⚠️ Aucune entrée trouvée pour aujourd'hui.",
-        "sw": "⚠️ Hakuna maandishi yaliyopatikana leo."
-    }
-}
-
 @app.route("/", methods=["GET"])
 def home():
     lang = request.args.get("lang", "en")
     today = datetime.now().strftime("%Y-%m-%d")
     filename = "dynamic_devotions.json"
     devo = None
-
-    # Load devotional content
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
         devo = data.get(today, {}).get(lang)
-
-        # Fallback to English if not available in selected language
-        if not devo:
-            devo = data.get(today, {}).get("en")
-
-    # Define available languages
-    languages = {
-        "en": "English",
-        "fr": "Français",
-        "sw": "Kiswahili",
-        "ar": "العربية",
-        "zh": "中文",
-        "hi": "हिन्दी"
-    }
-
-    return render_template("index.html", devo=devo, lang=lang, languages=languages)
+    return render_template("index.html", devo=devo, lang=lang)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -71,14 +35,26 @@ def login():
             session["user"] = username
             return redirect(url_for("journal"))
         else:
-            flash("Invalid credentials.")
-            return redirect(url_for("login"))
+            return "Invalid credentials. <a href='/login'>Try again</a>"
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
+
+@app.route("/journal", methods=["GET"])
+def journal():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    lang = request.args.get("lang", "en")
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    filename = f"journal_{date_str}_{lang}.txt"
+    content = ""
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read()
+    return render_template("journal.html", lang=lang, entry=content)
 
 @app.route("/journal", methods=["POST"], endpoint="save_journal")
 def save_journal():
@@ -91,20 +67,7 @@ def save_journal():
     with open(filename, "w", encoding="utf-8") as f:
         f.write(entry)
     flash("✅ Entry saved successfully.")
-    return redirect(url_for("journal", lang=lang))
-
-@app.route("/submit", methods=["POST"])
-def submit():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    lang = request.args.get("lang", "en")
-    entry = request.form.get("entry")
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    filename = f"journal_{date_str}_{lang}.txt"
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(entry.strip() + "\n")
-    flash(messages["saved"].get(lang, messages["saved"]["en"]))
-    return redirect(url_for("journal", lang=lang))
+    return redirect(url_for("journal") + f"?lang={lang}")
 
 @app.route("/entries")
 def entries():
@@ -125,15 +88,15 @@ def entries():
 def clear():
     if "user" not in session:
         return redirect(url_for("login"))
-    lang = request.args.get("lang", "en")
+    lang = request.form.get("lang", "en")
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"journal_{date_str}_{lang}.txt"
     if os.path.exists(filename):
         os.remove(filename)
-        flash(messages["cleared"].get(lang, messages["cleared"]["en"]))
+        flash("🗑️ Today's journal entry has been cleared.")
     else:
-        flash(messages["not_found"].get(lang, messages["not_found"]["en"]))
-    return redirect(url_for("journal", lang=lang))
+        flash("⚠️ No entry found for today.")
+    return redirect(url_for("journal") + f"?lang={lang}")
 
 @app.route("/export_pdf")
 def export_pdf():
@@ -144,7 +107,7 @@ def export_pdf():
     files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(f"_{lang}.txt")]
     files.sort()
 
-    pdf_path = f"journal_export_{lang}.pdf"
+    pdf_path = "journal_export.pdf"
     c = canvas.Canvas(pdf_path, pagesize=LETTER)
     width, height = LETTER
     y = height - 50
@@ -157,18 +120,18 @@ def export_pdf():
             y -= 20
 
             c.setFont("Helvetica", 12)
-            for line in f:
-                line = line.strip()
-                if line:
+            for line in f.readlines():
+                for segment in line.strip().split("\n"):
                     if y < 50:
                         c.showPage()
                         y = height - 50
-                    c.drawString(50, y, line)
+                    c.drawString(50, y, segment)
                     y -= 15
 
-            y -= 30
+            y -= 30  # Space between entries
 
     c.save()
+
     return send_file(pdf_path, as_attachment=True)
 
 @app.route("/view_by_date")
