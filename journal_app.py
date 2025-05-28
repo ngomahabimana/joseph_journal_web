@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from datetime import datetime
 import os
 import json
-from devotions import DEVOTIONS
+# from devotions import DEVOTIONS  # Unused, commented out
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
