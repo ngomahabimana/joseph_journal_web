@@ -4,8 +4,17 @@
 <head>
 <title>Login</title>
 <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/></head>
-<body><p class="welcome">Welcome to Joseph Ngoma’s Journal App — a place for reflection, inspiration, and spiritual growth. If you're new, feel free to explore the daily devotionals or contact us for more info.</p>
-<h2>🔐 Login to Access Your Journal</h2>
+<body>
+<form action="" method="get" style="margin-bottom: 15px;">
+<label for="lang">🌐 Language:</label>
+<select id="lang" name="lang" onchange="this.form.submit()">
+<option %}="" %}selected{%="" endif="" if="" lang="en" value="en" {%="">English</option>
+<option %}="" %}selected{%="" endif="" if="" lang="fr" value="fr" {%="">Français</option>
+<option %}="" %}selected{%="" endif="" if="" lang="sw" value="sw" {%="">Kiswahili</option>
+</select>
+</form>
+<p class="welcome">Welcome to Joseph Ngoma’s Journal App — a place for reflection, inspiration, and spiritual growth. If you're new, feel free to explore the daily devotionals or contact us for more info.</p>
+<h2>{% if lang == 'fr' %}🔐 Connectez-vous pour accéder à votre journal{% elif lang == 'sw' %}🔐 Ingia ili kufikia jarida lako{% else %}🔐 Login to Access Your Journal{% endif %}</h2>
 <form method="POST">
 <label>Username:</label><br/>
 <input name="username" type="text"/><br/><br/>
