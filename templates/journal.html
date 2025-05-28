@@ -1,13 +1,23 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Journal | Joseph Ngoma</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Journal | Joseph Ngoma</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
+<form action="" method="get" style="margin-bottom: 15px;">
+<label for="lang">🌐 Language:</label>
+<select id="lang" name="lang" onchange="this.form.submit()">
+<option %}="" %}selected{%="" endif="" if="" lang="en" value="en" {%="">English</option>
+<option %}="" %}selected{%="" endif="" if="" lang="fr" value="fr" {%="">Français</option>
+<option %}="" %}selected{%="" endif="" if="" lang="sw" value="sw" {%="">Kiswahili</option>
+</select>
+</form>
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul style="color: green;">
@@ -19,45 +29,39 @@
   {% endwith %}
 
   <header>
-    <h1>Daily Journal</h1>
-    <p>Let your words be your offering</p>
-  </header>
-
-  <div class="container">
-    <div class="verse-box">
-      <strong>Verse of the Day:</strong>
-      <p>{{ verse }}</p>
-    </div>
-
-    <div class="devotional-box">
-      <strong>Devotional Thought:</strong>
-      <p>{{ devotional }}</p>
-    </div>
-
-    <form method="POST" action="{{ url_for('submit') }}">
-      <h2>Write Today’s Entry</h2>
-      <textarea name="entry" placeholder="Dear Lord, today I..." required rows="6"></textarea><br />
-      <button type="submit">💾 Save Entry</button>
-    </form>
-
-    <h2>📖 Previous Entries</h2>
+<h1>{% if lang == 'fr' %}Journal Quotidien{% elif lang == 'sw' %}Jarida la Kila Siku{% else %}Daily Journal{% endif %}</h1>
+<p>{% if lang == 'fr' %}Que vos mots soient votre offrande{% elif lang == 'sw' %}Maneno yako na yawe sadaka yako{% else %}Let your words be your offering{% endif %}</p>
+</header>
+<div class="container">
+<div class="verse-box">
+<strong>{% if lang == 'fr' %}Verset du jour :{% elif lang == 'sw' %}Aya ya siku:{% else %}Verse of the Day:{% endif %}</strong>
+<p>{{ verse }}</p>
+</div>
+<div class="devotional-box">
+<strong>{% if lang == 'fr' %}Pensée du jour :{% elif lang == 'sw' %}Mafundisho ya leo:{% else %}Devotional Thought:{% endif %}</strong>
+<p>{{ devotional }}</p>
+</div>
+<form action="{{ url_for('submit') }}" method="POST">
+<h2>{% if lang == 'fr' %}Écrivez l'entrée d'aujourd'hui{% elif lang == 'sw' %}Andika maandishi ya leo{% else %}Write Today’s Entry{% endif %}</h2>
+<textarea name="entry" placeholder="Dear Lord, today I..." required="" rows="6"></textarea><br/>
+<button type="submit">{% if lang == 'fr' %}💾 Sauvegarder{% elif lang == 'sw' %}💾 Hifadhi maandishi{% else %}💾 Save Entry{% endif %}</button>
+</form>
+<h2>{% if lang == 'fr' %}📖 Entrées précédentes{% elif lang == 'sw' %}📖 Maandishi yaliyopita{% else %}📖 Previous Entries{% endif %}</h2>
     {% for entry in entries %}
       <div class="entry">
-        <pre>{{ entry }}</pre>
-      </div>
+<pre>{{ entry }}</pre>
+</div>
     {% endfor %}
 
     <form action="{{ url_for('clear') }}" method="POST" style="margin-top: 20px;">
-      <button type="submit">🗑️ Clear Today's Entry</button>
-    </form>
-
-    <form action="{{ url_for('export_pdf') }}" method="GET">
-      <button type="submit">⬇️ Export All Entries</button>
-    </form>
-  </div>
-
-  <footer style="margin-top: 40px; text-align: center;">
-    <p>&copy; {{ current_year }} Joseph Ngoma. All rights reserved.</p>
-  </footer>
+<button type="submit">{% if lang == 'fr' %}🗑️ Effacer l'entrée d'aujourd'hui{% elif lang == 'sw' %}🗑️ Futa maandishi ya leo{% else %}🗑️ Clear Today's Entry{% endif %}</button>
+</form>
+<form action="{{ url_for('export_pdf') }}" method="GET">
+<button type="submit">{% if lang == 'fr' %}⬇️ Exporter toutes les entrées{% elif lang == 'sw' %}⬇️ Pakua maandishi yote{% else %}⬇️ Export All Entries{% endif %}</button>
+</form>
+</div>
+<footer style="margin-top: 40px; text-align: center;">
+<p>© {{ current_year }} Joseph Ngoma. All rights reserved.</p>
+</footer>
 </body>
 </html>
