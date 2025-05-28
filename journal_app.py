@@ -43,7 +43,7 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-@app.route("/journal", methods=["GET"])
+@app.route("/journal", methods=["GET"], endpoint="journal")
 def journal():
     if "user" not in session:
         return redirect(url_for("login"))
