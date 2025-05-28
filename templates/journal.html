@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -17,7 +16,6 @@
 <option %}="" %}selected{%="" endif="" if="" lang="sw" value="sw" {%="">Kiswahili</option>
 </select>
 </form>
-
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul style="color: green;">
@@ -27,7 +25,6 @@
       </ul>
     {% endif %}
   {% endwith %}
-
   <header>
 <h1>{% if lang == 'fr' %}Journal Quotidien{% elif lang == 'sw' %}Jarida la Kila Siku{% else %}Daily Journal{% endif %}</h1>
 <p>{% if lang == 'fr' %}Que vos mots soient votre offrande{% elif lang == 'sw' %}Maneno yako na yawe sadaka yako{% else %}Let your words be your offering{% endif %}</p>
