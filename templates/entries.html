@@ -1,40 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ lang }}">
 <head>
-<title>All Journal Entries</title>
-<link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
-<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <title>{% if lang == 'fr' %}Toutes les entrées{% elif lang == 'sw' %}Maandishi Yote{% else %}All Journal Entries{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<form method="get" action="" style="margin-bottom: 15px;">
-  <label for="lang">🌐 Language:</label>
-  <select name="lang" id="lang" onchange="this.form.submit()">
-    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
-    <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
-    <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
-  </select>
-</form>
-<nav style="margin-bottom: 20px;">
-<a href="/">🏠 Home</a> |
-        <a href="/entries">📚 View Entries</a> |
-        <a href="/search">🔍 Search</a>
-</nav>
-<h1>{% if lang == 'fr' %}📚 Toutes les entrées du journal{% elif lang == 'sw' %}📚 Maandishi yote ya jarida{% else %}📚 All Journal Entries{% endif %}</h1>
+  <!-- Language Selector -->
+  <form method="get" action="{{ url_for('entries') }}" style="margin-bottom: 15px;">
+    <label for="lang">🌐 Language:</label>
+    <select name="lang" id="lang" onchange="this.form.submit()">
+      <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+      <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+      <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
+    </select>
+  </form>
 
-    {% if entries %}
-        <ul style="list-style-type: none; padding: 0;">
-            {% for date, content in entries.items() %}
-                <li style="margin-bottom: 1rem;">
-<a href="{{ url_for('view_by_date') }}?date={{ date }}" style="font-weight: bold; font-size: 1.1rem;">
-                        📅 {{ date }}
-                    </a>
-</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>{% if lang == 'fr' %}Aucune entrée trouvée.{% elif lang == 'sw' %}Hakuna maandishi yaliyopatikana.{% else %}No journal entries found.{% endif %}</p>
-    {% endif %}
+  <!-- Navigation -->
+  <nav style="margin-bottom: 20px;">
+    <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a> |
+    <a href="{{ url_for('journal', lang=lang) }}">📘 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a> |
+    <a href="{{ url_for('search') }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
+  </nav>
 
-    <p><a href="/">{% if lang == 'fr' %}← Retour à l'accueil{% elif lang == 'sw' %}← Rudi nyumbani{% else %}← Back to Home{% endif %}</a></p>
+  <h1>{% if lang == 'fr' %}📚 Toutes les entrées du journal{% elif lang == 'sw' %}📚 Maandishi yote ya jarida{% else %}📚 All Journal Entries{% endif %}</h1>
+
+  {% if entries %}
+    <ul style="list-style-type: none; padding: 0;">
+      {% for date, content in entries.items() %}
+        <li style="margin-bottom: 1rem;">
+          <a href="{{ url_for('view_by_date') }}?date={{ date }}&lang={{ lang }}" style="font-weight: bold; font-size: 1.1rem;">
+            📅 {{ date }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% if lang == 'fr' %}Aucune entrée trouvée.{% elif lang == 'sw' %}Hakuna maandishi yaliyopatikana.{% else %}No journal entries found.{% endif %}</p>
+  {% endif %}
+
+  <p><a href="{{ url_for('home', lang=lang) }}">{% if lang == 'fr' %}← Retour à l'accueil{% elif lang == 'sw' %}← Rudi nyumbani{% else %}← Back to Home{% endif %}</a></p>
 </body>
 </html>
