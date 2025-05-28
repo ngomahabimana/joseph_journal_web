@@ -1,23 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8">
-  <title>Send a Message</title>
+  <title>{% if lang == 'fr' %}Envoyer un message{% elif lang == 'sw' %}Tuma Ujumbe{% else %}Send a Message{% endif %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container">
-    <h1>📨 Send a Message or Preaching</h1>
-    <p>Let your words inspire and uplift others</p>
+    <h1>📨 {% if lang == 'fr' %}Envoyez un message ou une prédication{% elif lang == 'sw' %}Tuma Ujumbe au Mahubiri{% else %}Send a Message or Preaching{% endif %}</h1>
+    <p>{% if lang == 'fr' %}Que vos mots inspirent et élèvent les autres{% elif lang == 'sw' %}Maneno yako yawe ya kuhamasisha na kuinua wengine{% else %}Let your words inspire and uplift others{% endif %}</p>
+
     <form method="POST" action="/message">
-  <input type="text" name="name" placeholder="Your name" required><br><br>
-  <textarea name="message" placeholder="Your message or prayer" rows="5" required></textarea><br><br>
-  <button type="submit">Send Message</button>
-</form>
+      <input type="hidden" name="lang" value="{{ lang }}">
+      <input type="text" name="name" placeholder="{% if lang == 'fr' %}Votre nom{% elif lang == 'sw' %}Jina lako{% else %}Your name{% endif %}" required><br><br>
+      <textarea name="message" placeholder="{% if lang == 'fr' %}Votre message ou prière{% elif lang == 'sw' %}Ujumbe au sala yako{% else %}Your message or prayer{% endif %}" rows="5" required></textarea><br><br>
+      <button type="submit">{% if lang == 'fr' %}Envoyer le message{% elif lang == 'sw' %}Tuma Ujumbe{% else %}Send Message{% endif %}</button>
+    </form>
+
     {% if success %}
-      <p style="color: lightgreen; margin-top: 1rem;">✅ Message submitted successfully!</p>
+      <p style="color: lightgreen; margin-top: 1rem;">✅ {% if lang == 'fr' %}Message envoyé avec succès!{% elif lang == 'sw' %}Ujumbe umetumwa kwa mafanikio!{% else %}Message submitted successfully!{% endif %}</p>
     {% endif %}
-    <a href="/">← Back to Home</a>
+
+    <a href="/?lang={{ lang }}">← {% if lang == 'fr' %}Retour à l'accueil{% elif lang == 'sw' %}Rudi nyumbani{% else %}Back to Home{% endif %}</a>
   </div>
 </body>
 </html>
