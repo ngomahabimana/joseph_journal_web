@@ -1,3 +1,4 @@
+from translations import translations
 from reportlab.lib.pagesizes import LETTER
 from reportlab.pdfgen import canvas
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_file
@@ -38,11 +39,28 @@ def home():
     today = datetime.now().strftime("%Y-%m-%d")
     filename = "dynamic_devotions.json"
     devo = None
+
+    # Load devotional content
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
         devo = data.get(today, {}).get(lang)
-    return render_template("index.html", devo=devo, lang=lang)
+
+        # Fallback to English if not available in selected language
+        if not devo:
+            devo = data.get(today, {}).get("en")
+
+    # Define available languages
+    languages = {
+        "en": "English",
+        "fr": "Français",
+        "sw": "Kiswahili",
+        "ar": "العربية",
+        "zh": "中文",
+        "hi": "हिन्दी"
+    }
+
+    return render_template("index.html", devo=devo, lang=lang, languages=languages)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -62,18 +80,18 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-@app.route("/journal", methods=["GET"])
-def journal():
+@app.route("/journal", methods=["POST"])
+def save_journal():
     if "user" not in session:
         return redirect(url_for("login"))
-    lang = request.args.get("lang", "en")
+    lang = request.form.get("lang", "en")
+    entry = request.form.get("entry", "")
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"journal_{date_str}_{lang}.txt"
-    content = ""
-    if os.path.exists(filename):
-        with open(filename, "r", encoding="utf-8") as f:
-            content = f.read()
-    return render_template("journal.html", lang=lang, entry=content)
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(entry)
+    flash("✅ Entry saved successfully.")
+    return redirect(url_for("journal", lang=lang))
 
 @app.route("/submit", methods=["POST"])
 def submit():
