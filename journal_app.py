@@ -138,15 +138,31 @@ def export_pdf():
 def view_by_date():
     if "user" not in session:
         return redirect(url_for("login"))
-    lang = request.args.get("lang", "en")
+
     date = request.args.get("date")
+    lang = request.args.get("lang", "en")
     filename = f"journal_{date}_{lang}.txt"
+
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             content = f.read()
     else:
-        content = "No entry found for this date."
-    return f"<h2>Journal Entry for {date}</h2><pre>{content}</pre><p><a href='/journal?lang={lang}'>Back</a></p>"
+        content = {
+            "en": "No entry found for this date.",
+            "fr": "Aucune entrée trouvée pour cette date.",
+            "sw": "Hakuna maandishi yaliyopatikana kwa tarehe hii.",
+        }.get(lang, "No entry found for this date.")
+
+    return f"""
+    <html lang="{lang}">
+    <head><title>Journal Entry</title></head>
+    <body>
+        <h2>📅 {date}</h2>
+        <pre>{content}</pre>
+        <p><a href="{url_for('entries')}?lang={lang}">← {'Retour' if lang == 'fr' else 'Rudi' if lang == 'sw' else 'Back'}</a></p>
+    </body>
+    </html>
+    """
 @app.route("/devotional", methods=["GET", "POST"])
 def devotional():
     if "user" not in session:
