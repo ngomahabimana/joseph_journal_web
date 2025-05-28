@@ -8,6 +8,7 @@
 <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
+
 <form method="get" action="/journal" style="margin-bottom: 15px;">
   <label for="lang">🌐 Language:</label>
   <select name="lang" id="lang" onchange="this.form.submit()">
@@ -19,6 +20,7 @@
     <option value="hi" {{ 'selected' if lang == 'hi' else '' }}>हिन्दी</option>
   </select>
 </form>
+
 <form method="post" action="{{ url_for('save_journal') }}">
   <input type="hidden" name="lang" value="{{ lang }}">
 
