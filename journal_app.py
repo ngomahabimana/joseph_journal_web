@@ -233,11 +233,20 @@ def submit_devotional():
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    lang = request.args.get("lang", "en")
+    return render_template("about.html", lang=lang)
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    lang = request.args.get("lang", "en")
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        message = request.form.get("message")
+        # You can save or send this info as needed
+        flash("✅ Your message has been received!")
+        return redirect(url_for("contact", lang=lang))
+    return render_template("contact.html", lang=lang)
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
