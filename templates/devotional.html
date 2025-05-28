@@ -1,54 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
-    <meta charset="UTF-8" />
-    <title>Daily Devotional</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <meta charset="UTF-8">
+  <title>📖 Daily Devotional</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fdfdfd;
+      color: #333;
+    }
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    .devotional-card {
+      background-color: #f0f8ff;
+      padding: 20px;
+      border-radius: 6px;
+      margin-bottom: 30px;
+    }
+    h1, h2, h3 {
+      color: #003366;
+    }
+    textarea, input[type="text"], select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #003366;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0055aa;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 10px;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-<header>
-    <h1>📖 Daily Devotional</h1>
-    <p>Spiritual strength for {{ lang.upper() }} - {{ devo['verse'] if devo else 'New Message' }}</p>
-</header>
+
+<nav>
+  <a href="/">🏠 Home</a> |
+  <a href="/journal">📝 Journal</a> |
+  <a href="/entries">📚 Entries</a> |
+  <a href="/devotional">📖 Devotional</a> |
+  <a href="/logout">🚪 Logout</a>
+</nav>
 
 <div class="container">
+  <h1>📖 Daily Devotional - {{ current_date }}</h1>
 
-{% if devo %}
+  {% if devo %}
     <div class="devotional-card">
-        <h2>📘 {{ devo["verse"] }}</h2>
-        <p><em>{{ devo["text"] }}</em></p>
-        <h3>🧠 Reflection:</h3>
-        <p>{{ devo["reflection"] }}</p>
-        <h3>🙏 Prayer:</h3>
-        <p>{{ devo["prayer"] }}</p>
+      <h2>📘 Verse: {{ devo["verse"] }}</h2>
+      <p><strong>Text:</strong> {{ devo["text"] }}</p>
+
+      <h3>🧠 Reflection</h3>
+      <p>{{ devo["reflection"] }}</p>
+
+      <h3>🙏 Prayer</h3>
+      <p>{{ devo["prayer"] }}</p>
     </div>
-    <p style="margin-top: 20px;"><a href="{{ url_for('journal') }}">← Back to Journal</a></p>
+    <p><a href="{{ url_for('journal', lang=lang) }}">← Back to Journal</a></p>
+  {% else %}
+    <h3>No devotional submitted yet for today ({{ lang.upper() }}).</h3>
+    <p>You may submit one below:</p>
 
-{% else %}
-    <h2>⚠️ No devotional found for today ({{ lang.upper() }}).</h2>
-    <p>Submit one now:</p>
-    <form action="{{ url_for('submit_devotional') }}" method="POST">
-        <input type="text" name="date" value="{{ current_date }}" readonly />
-        <select name="lang" required>
-            <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
-            <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
-            <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
-        </select><br><br>
-        <input type="text" name="verse" placeholder="Verse (e.g. John 3:16)" required />
-        <input type="text" name="text" placeholder="Verse Text" required />
-        <textarea name="reflection" rows="3" placeholder="Reflection" required></textarea>
-        <textarea name="prayer" rows="3" placeholder="Prayer" required></textarea>
-        <button type="submit">Submit Devotional</button>
+    <form method="POST" action="{{ url_for('submit_devotional') }}">
+      <input type="text" name="date" value="{{ current_date }}" readonly>
+      <select name="lang">
+        <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+        <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+        <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
+        <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
+        <option value="zh" {% if lang == 'zh' %}selected{% endif %}>中文</option>
+        <option value="hi" {% if lang == 'hi' %}selected{% endif %}>हिन्दी</option>
+      </select>
+
+      <input type="text" name="verse" placeholder="Verse (e.g. John 3:16)" required>
+      <input type="text" name="text" placeholder="Verse Text" required>
+      <textarea name="reflection" placeholder="Reflection" rows="4" required></textarea>
+      <textarea name="prayer" placeholder="Prayer" rows="3" required></textarea>
+      <button type="submit">Submit Devotional</button>
     </form>
-{% endif %}
+  {% endif %}
 
-{% if success %}
-    <p style="color: lightgreen; font-weight: bold;">✅ Devotional submitted successfully!</p>
-{% endif %}
-
+  {% if success %}
+    <p style="color: green; margin-top: 1rem;">✅ Devotional submitted successfully!</p>
+  {% endif %}
 </div>
+
 <footer>
-    &copy; 2025 Joseph Habimana Ngoma. All rights reserved.
+  &copy; 2025 Joseph Habimana Ngoma — All Rights Reserved
 </footer>
+
 </body>
 </html>
