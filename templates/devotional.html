@@ -22,20 +22,7 @@
         <h3>🙏 Prayer:</h3>
         <p>{{ devo["prayer"] }}</p>
     </div>
-<form action="{{ url_for('submit_devotional') }}" method="POST">
-  <input type="hidden" name="date" value="{{ current_date }}">
-  <input type="text" name="lang" value="{{ lang }}">
-  <input type="text" name="verse" placeholder="Verse">
-  <textarea name="text" placeholder="Message"></textarea>
-  <textarea name="reflection" placeholder="Reflection"></textarea>
-  <textarea name="prayer" placeholder="Prayer"></textarea>
-  <button type="submit">Save Devotional</button>
-</form>
-
-
-    {% if success %}
-    <p style="color: lightgreen; font-weight: bold;">Message sent successfully!</p>
-    {% endif %}
+    <p style="margin-top: 20px;"><a href="{{ url_for('journal') }}">← Back to Journal</a></p>
 
 {% else %}
     <h2>⚠️ No devotional found for today ({{ lang.upper() }}).</h2>
@@ -43,9 +30,9 @@
     <form action="{{ url_for('submit_devotional') }}" method="POST">
         <input type="text" name="date" value="{{ current_date }}" readonly />
         <select name="lang" required>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="sw">Kiswahili</option>
+            <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+            <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+            <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
         </select><br><br>
         <input type="text" name="verse" placeholder="Verse (e.g. John 3:16)" required />
         <input type="text" name="text" placeholder="Verse Text" required />
@@ -53,6 +40,10 @@
         <textarea name="prayer" rows="3" placeholder="Prayer" required></textarea>
         <button type="submit">Submit Devotional</button>
     </form>
+{% endif %}
+
+{% if success %}
+    <p style="color: lightgreen; font-weight: bold;">✅ Devotional submitted successfully!</p>
 {% endif %}
 
 </div>
