@@ -2,43 +2,39 @@
 <html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8">
-  <title>{% if lang == 'fr' %}Toutes les entrées{% elif lang == 'sw' %}Maandishi Yote{% else %}All Journal Entries{% endif %}</title>
+  <title>{% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <!-- Language Selector -->
-  <form method="get" action="{{ url_for('entries') }}" style="margin-bottom: 15px;">
-    <label for="lang">🌐 Language:</label>
-    <select name="lang" id="lang" onchange="this.form.submit()">
-      <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
-      <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
-      <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
-    </select>
-  </form>
 
-  <!-- Navigation -->
-  <nav style="margin-bottom: 20px;">
-    <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a> |
-    <a href="{{ url_for('journal', lang=lang) }}">📘 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a> |
-    <a href="{{ url_for('search') }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
-  </nav>
+<h1>{% if lang == 'fr' %}📖 Entrées précédentes{% elif lang == 'sw' %}📖 Maandishi yaliyopita{% else %}📖 Previous Entries{% endif %}</h1>
 
-  <h1>{% if lang == 'fr' %}📚 Toutes les entrées du journal{% elif lang == 'sw' %}📚 Maandishi yote ya jarida{% else %}📚 All Journal Entries{% endif %}</h1>
+<!-- Language Selector -->
+<form method="get" action="{{ url_for('entries') }}" style="margin-bottom: 15px;">
+  <label for="lang">🌐 Language:</label>
+  <select name="lang" id="lang" onchange="this.form.submit()">
+    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+    <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+    <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
+    <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
+    <option value="zh" {% if lang == 'zh' %}selected{% endif %}>中文</option>
+    <option value="hi" {% if lang == 'hi' %}selected{% endif %}>हिन्दी</option>
+  </select>
+</form>
 
-  {% if entries %}
-    <ul style="list-style-type: none; padding: 0;">
-      {% for date, content in entries.items() %}
-        <li style="margin-bottom: 1rem;">
-          <a href="{{ url_for('view_by_date') }}?date={{ date }}&lang={{ lang }}" style="font-weight: bold; font-size: 1.1rem;">
-            📅 {{ date }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>{% if lang == 'fr' %}Aucune entrée trouvée.{% elif lang == 'sw' %}Hakuna maandishi yaliyopatikana.{% else %}No journal entries found.{% endif %}</p>
-  {% endif %}
+<!-- Journal Entries -->
+{% for date, content in entries.items() %}
+  <div class="entry">
+    <h3>📅 {{ date }}</h3>
+    <pre>{{ content }}</pre>
+  </div>
+{% endfor %}
 
-  <p><a href="{{ url_for('home', lang=lang) }}">{% if lang == 'fr' %}← Retour à l'accueil{% elif lang == 'sw' %}← Rudi nyumbani{% else %}← Back to Home{% endif %}</a></p>
+<!-- Navigation -->
+<nav style="margin-top: 20px;">
+  <a href="{{ url_for('journal', lang=lang) }}">📝 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a> |
+  <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a>
+</nav>
+
 </body>
 </html>
