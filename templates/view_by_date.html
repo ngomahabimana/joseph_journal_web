@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{% if lang == 'fr' %}Entrée du Journal{% elif lang == 'sw' %}Maandishi ya Jarida{% else %}Journal Entry{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav style="margin-bottom: 20px;">
+    <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a> |
+    <a href="{{ url_for('journal', lang=lang) }}">📘 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a> |
+    <a href="{{ url_for('entries', lang=lang) }}">📚 {% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</a>
+  </nav>
+
+  <h2>
+    {% if lang == 'fr' %}Entrée du journal pour{% elif lang == 'sw' %}Maandishi ya tarehe{% else %}Journal Entry for{% endif %}
+    {{ date }}
+  </h2>
+
+  <pre>{{ content }}</pre>
+
+  <p>
+    <a href="{{ url_for('entries', lang=lang) }}">
+      {% if lang == 'fr' %}← Retour aux entrées{% elif lang == 'sw' %}← Rudi kwenye maandishi{% else %}← Back to Entries{% endif %}
+    </a>
+  </p>
+</body>
+</html>
