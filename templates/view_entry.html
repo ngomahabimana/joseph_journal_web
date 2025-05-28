@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ lang }}">
 <head>
-    <title>Journal Entry - {{ date }}</title>
+    <meta charset="UTF-8">
+    <title>{% if lang == 'fr' %}Entrée du journal - {{ date }}{% elif lang == 'sw' %}Maandishi ya Jarida - {{ date }}{% else %}Journal Entry - {{ date }}{% endif %}</title>
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
 </head>
 <body>
     <nav>
-        <a href="/">🏠 Home</a> |
-        <a href="/entries">📚 View Entries</a> |
-        <a href="/search">🔍 Search</a>
+        <a href="/?lang={{ lang }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a> |
+        <a href="/entries?lang={{ lang }}">📚 {% if lang == 'fr' %}Voir les entrées{% elif lang == 'sw' %}Tazama Maandishi{% else %}View Entries{% endif %}</a> |
+        <a href="/search?lang={{ lang }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
     </nav>
 
     <div class="container">
-        <h2>📅 Journal Entry for {{ date }}</h2>
+        <h2>📅 {% if lang == 'fr' %}Entrée du {{ date }}{% elif lang == 'sw' %}Maandishi ya {{ date }}{% else %}Journal Entry for {{ date }}{% endif %}</h2>
         <pre>{{ content }}</pre>
-        <p><a href="/entries">← Back to All Entries</a></p>
+        <p><a href="/entries?lang={{ lang }}">← {% if lang == 'fr' %}Retour à toutes les entrées{% elif lang == 'sw' %}Rudi kwa maandishi yote{% else %}Back to All Entries{% endif %}</a></p>
     </div>
 </body>
 </html>
