@@ -9,23 +9,24 @@
 <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
 </head>
 <body>
-<form method="get" action="" style="margin-bottom: 15px;">
-  <label for="lang">🌐 Language:</label>
-  <select name="lang" id="lang" onchange="this.form.submit()">
-    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
-    <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
-    <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
-  </select>
+<form method="post" action="{{ url_for('save_journal') }}">
+  <input type="hidden" name="lang" value="{{ lang }}">
+  
+  <label for="entry">📘 Write your journal entry:</label><br>
+  <textarea name="entry" rows="10" cols="60" placeholder="Write here...">{{ entry }}</textarea><br><br>
+
+  <button type="submit">💾 Save Entry</button>
 </form>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul style="color: green;">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="color: green;">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
   <header>
 <h1>{% if lang == 'fr' %}Journal Quotidien{% elif lang == 'sw' %}Jarida la Kila Siku{% else %}Daily Journal{% endif %}</h1>
 <p>{% if lang == 'fr' %}Que vos mots soient votre offrande{% elif lang == 'sw' %}Maneno yako na yawe sadaka yako{% else %}Let your words be your offering{% endif %}</p>
