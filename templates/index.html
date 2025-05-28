@@ -1,108 +1,48 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
-<meta charset="utf-8"/>
-<title>Joseph's Journal</title>
-<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
-{% if lang == 'ar' %}
-<style>body { direction: rtl; text-align: right; }</style>
-{% endif %}
+  <meta charset="UTF-8">
+  <title>{% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<form method="get" action="/">
-    <select name="lang" onchange="this.form.submit()">
-        <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
-        <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
-        <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
-        <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
-        <option value="zh" {% if lang == 'zh' %}selected{% endif %}>中文</option>
-        <option value="hi" {% if lang == 'hi' %}selected{% endif %}>हिन्दी</option>
-    </select>
+
+<h1>{% if lang == 'fr' %}Bienvenue{% elif lang == 'sw' %}Karibu{% else %}Welcome{% endif %}</h1>
+
+<!-- Language Selector -->
+<form method="get" action="{{ url_for('home') }}" style="margin-bottom: 15px;">
+  <label for="lang">🌐 Language:</label>
+  <select name="lang" id="lang" onchange="this.form.submit()">
+    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+    <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+    <option value="sw" {% if lang == 'sw' %}selected{% endif %}>Kiswahili</option>
+    <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
+    <option value="zh" {% if lang == 'zh' %}selected{% endif %}>中文</option>
+    <option value="hi" {% if lang == 'hi' %}selected{% endif %}>हिन्दी</option>
+  </select>
 </form>
-<nav>
-<a href="/">🏠 Home</a>
-<a href="/entries">📚 View Entries</a>
-<a href="/search">🔍 Search</a>
-<a href="/devotional">📖 Devotionals</a>
-<a href="/about">ℹ️ About</a>
-<a href="/contact">✉️ Contact</a>
-<a href="/message">✉️ Send a Message</a>
+
+<!-- Daily Devotion Section -->
+{% if devo %}
+  <div class="devotion">
+    <h3>{% if lang == 'fr' %}Méditation du jour{% elif lang == 'sw' %}Mafundisho ya leo{% else %}Today's Devotion{% endif %}</h3>
+    <p>{{ devo }}</p>
+  </div>
+{% else %}
+  <p>{% if lang == 'fr' %}Aucune dévotion disponible aujourd'hui.{% elif lang == 'sw' %}Hakuna mafundisho leo.{% else %}No devotion available today.{% endif %}</p>
+{% endif %}
+
+<!-- Navigation -->
+<nav style="margin-top: 20px;">
+  <a href="{{ url_for('journal', lang=lang) }}">📝 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a> |
+  <a href="{{ url_for('entries', lang=lang) }}">📖 {% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</a> |
+  <a href="{{ url_for('login', lang=lang) }}">🔐 {% if lang == 'fr' %}Connexion{% elif lang == 'sw' %}Ingia{% else %}Login{% endif %}</a>
 </nav>
-<div class="container">
-<h1>
-{% if lang == 'fr' %}
-📖 Bienvenue dans le Journal de Joseph
-{% elif lang == 'sw' %}
-📖 Karibu kwenye Jarida la Joseph
-{% elif lang == 'ar' %}
-📖 مرحبًا بك في مذكرات جوزيف
-{% elif lang == 'zh' %}
-📖 欢迎来到约瑟的日记
-{% elif lang == 'hi' %}
-📖 जोसेफ की डायरी में आपका स्वागत है
-{% else %}
-📖 Welcome to Joseph's Journal
-{% endif %}
-</h1>
-<p>
-{% if lang == 'fr' %}
-C'est votre espace sacré pour réfléchir, écrire et grandir dans la foi. Ici, vous pouvez :
-{% elif lang == 'sw' %}
-Hii ni nafasi yako takatifu ya kutafakari, kuandika, na kukua katika imani. Hapa unaweza:
-{% elif lang == 'ar' %}
-هذه مساحتك المقدسة للتفكير والكتابة والنمو في الإيمان. هنا يمكنك:
-{% elif lang == 'zh' %}
-这是你用来反思、记录并在信仰中成长的神圣空间。你可以在这里：
-{% elif lang == 'hi' %}
-यह आपके चिंतन, लेखन और विश्वास में वृद्धि के लिए पवित्र स्थान है। यहाँ आप कर सकते हैं:
-{% else %}
-This is your sacred space to reflect, record, and grow in faith. Here you can:
-{% endif %}
-</p>
-<ul>
-<li>
-{% if lang == 'fr' %}✍️ Écrire des entrées quotidiennes
-{% elif lang == 'sw' %}✍️ Andika maandishi ya kila siku
-{% elif lang == 'ar' %}✍️ كتابة مذكرات يومية
-{% elif lang == 'zh' %}✍️ 写每日日记
-{% elif lang == 'hi' %}✍️ दैनिक प्रविष्टियाँ लिखें
-{% else %}✍️ Write daily journal entries{% endif %}
-</li>
-<li>
-{% if lang == 'fr' %}📚 Relire vos anciennes entrées
-{% elif lang == 'sw' %}📚 Pitia maandishi yako ya awali
-{% elif lang == 'ar' %}📚 مراجعة مذكراتك السابقة
-{% elif lang == 'zh' %}📚 查看你以前的日记
-{% elif lang == 'hi' %}📚 अपनी पिछली प्रविष्टियाँ देखें
-{% else %}📚 Review your past entries{% endif %}
-</li>
-<li>
-{% if lang == 'fr' %}🔍 Recherchez l'inspiration dans vos écrits
-{% elif lang == 'sw' %}🔍 Tafuta msukumo kwenye maandishi yako
-{% elif lang == 'ar' %}🔍 ابحث عن الإلهام في كتاباتك
-{% elif lang == 'zh' %}🔍 从你的文字中寻找灵感
-{% elif lang == 'hi' %}🔍 अपनी लिखावट में प्रेरणा खोजें
-{% else %}🔍 Search for inspiration in your writings{% endif %}
-</li>
-<li>
-{% if lang == 'fr' %}📖 Lire les méditations quotidiennes
-{% elif lang == 'sw' %}📖 Soma mafundisho ya kila siku
-{% elif lang == 'ar' %}📖 قراءة التأملات اليومية
-{% elif lang == 'zh' %}📖 阅读每日灵修
-{% elif lang == 'hi' %}📖 दैनिक भक्ति पढ़ें
-{% else %}📖 Read daily devotionals{% endif %}
-</li>
-</ul>
-<h3>📘 Today's Verse</h3>
-<p><strong>{{ verse }}</strong></p>
-<h4>🕊️ Devotional Thought</h4>
-<p>{{ devotional }}</p>
-<form action="/submit" method="POST" style="margin-top: 30px;">
-<input type="hidden" name="lang" value="{{ lang }}">
-<textarea cols="60" name="entry" placeholder="Write your journal entry here..." required rows="6"></textarea><br/>
-<button type="submit">Save Entry</button>
-</form>
-</div>
+
+<footer style="margin-top: 40px; text-align: center;">
+  <p>© 2025 Joseph Ngoma. All rights reserved.</p>
+</footer>
+
 </body>
 </html>
-
