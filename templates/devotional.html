@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
+    <div class="fixed-nav">
+  <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a>
+  <a href="{{ url_for('journal', lang=lang) }}">📝 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a>
+  <a href="{{ url_for('entries', lang=lang) }}">📖 {% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</a>
+  <a href="{{ url_for('devotional', lang=lang) }}">🙏 {% if lang == 'fr' %}Méditation{% elif lang == 'sw' %}Mafundisho{% else %}Devotional{% endif %}</a>
+  <a href="{{ url_for('search', lang=lang) }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
+  <a href="{{ url_for('logout') }}">🚪 {% if lang == 'fr' %}Déconnexion{% elif lang == 'sw' %}Toka{% else %}Logout{% endif %}</a>
+</div>
+
 <header>
     <h1>📖 Daily Devotional</h1>
     <p>Spiritual strength for {{ lang.upper() }} - {{ devo['verse'] if devo else 'New Message' }}</p>
