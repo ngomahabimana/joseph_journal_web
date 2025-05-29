@@ -4,13 +4,71 @@
   <meta charset="UTF-8">
   <title>{% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 5px;
+    }
+
+    .entry {
+      background: white;
+      border-left: 5px solid #4CAF50;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .entry h3 {
+      margin-top: 0;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    nav {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    nav a {
+      margin: 0 10px;
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
 <h1>{% if lang == 'fr' %}📖 Entrées précédentes{% elif lang == 'sw' %}📖 Maandishi yaliyopita{% else %}📖 Previous Entries{% endif %}</h1>
 
-<!-- Language Selector -->
-<form method="get" action="{{ url_for('entries') }}" style="margin-bottom: 15px;">
+<form method="get" action="{{ url_for('entries') }}">
   <label for="lang">🌐 Language:</label>
   <select name="lang" id="lang" onchange="this.form.submit()">
     <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
@@ -22,16 +80,16 @@
   </select>
 </form>
 
-<!-- Journal Entries -->
 {% for date, content in entries.items() %}
   <div class="entry">
     <h3>📅 {{ date }}</h3>
     <pre>{{ content }}</pre>
   </div>
+{% else %}
+  <p style="text-align: center; font-style: italic;">No journal entries available for this language.</p>
 {% endfor %}
 
-<!-- Navigation -->
-<nav style="margin-top: 20px;">
+<nav>
   <a href="{{ url_for('journal', lang=lang) }}">📝 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a> |
   <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a>
 </nav>
