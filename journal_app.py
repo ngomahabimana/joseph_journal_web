@@ -115,36 +115,16 @@ def export_pdf():
 
             c.setFont("Helvetica", 12)
             for line in f.readlines():
-                for segment in line.strip().split("
-"):
-                    if y < 50:
-                        c.showPage()
-                        y = height - 50
-                    c.drawString(50, y, segment)
-                    y -= 15
-
+                if y < 50:
+                    c.showPage()
+                    y = height - 50
+                c.drawString(50, y, line.strip())
+                y -= 15
             y -= 30
 
     c.save()
     return send_file(pdf_path, as_attachment=True)
 
-@app.route("/view_by_date")
-def view_by_date():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    date = request.args.get("date")
-    lang = request.args.get("lang", "en")
-    filename = f"journal_{date}_{lang}.txt"
-    if os.path.exists(filename):
-        with open(filename, "r", encoding="utf-8") as f:
-            content = f.read()
-    else:
-        content = {
-            "en": "No entry found for this date.",
-            "fr": "Aucune entrée trouvée pour cette date.",
-            "sw": "Hakuna maandishi yaliyopatikana kwa tarehe hii.",
-        }.get(lang, "No entry found for this date.")
-    return f"<html lang='{lang}'><head><title>Journal Entry</title></head><body><h2>📅 {date}</h2><pre>{content}</pre><p><a href='{url_for('entries')}?lang={lang}'>← Back</a></p></body></html>"
 @app.route("/devotional", methods=["GET", "POST"])
 def devotional():
     if "user" not in session:
@@ -167,17 +147,16 @@ def devotional():
             messages = json.load(f)
 
     if request.method == "POST":
-        if "message" in request.form:
-            name = request.form.get("name")
-            message = request.form.get("message")
-            entry = {
-                "name": name,
-                "message": message,
-                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }
-            messages.append(entry)
-            with open(messages_filename, "w", encoding="utf-8") as f:
-                json.dump(messages, f, ensure_ascii=False, indent=2)
+        name = request.form.get("name")
+        message = request.form.get("message")
+        entry = {
+            "name": name,
+            "message": message,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        messages.append(entry)
+        with open(messages_filename, "w", encoding="utf-8") as f:
+            json.dump(messages, f, ensure_ascii=False, indent=2)
 
     current_date = datetime.utcnow().strftime("%Y-%m-%d")
     return render_template("devotional.html", devo=devo, messages=messages, lang=lang, current_date=current_date)
@@ -225,7 +204,6 @@ def contact():
         name = request.form.get("name")
         email = request.form.get("email")
         message = request.form.get("message")
-        # You can save or send this info as needed
         flash("✅ Your message has been received!")
         return redirect(url_for("contact", lang=lang))
     return render_template("contact.html", lang=lang)
@@ -245,7 +223,8 @@ def search():
                 content = f.read()
                 if query in content.lower():
                     date = file.replace("journal_", "").replace(".txt", "")
-                    results.append(f"📅 {date}:\n{content.strip()}")
+                    results.append(f"📅 {date}:
+{content.strip()}")
     return render_template("search.html", results=results, query=query)
 
 @app.route("/message", methods=["GET", "POST"])
@@ -261,10 +240,6 @@ def message():
             f.write(f"[{timestamp}] {name}: {msg}\n")
         success = True
     return render_template("message.html", success=success)
-
-@app.route("/message_success")
-def message_success():
-    return "<h3>Your message has been sent successfully.</h3><p><a href='/message'>Send another</a></p>"
 
 if __name__ == "__main__":
     from os import environ
