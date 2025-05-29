@@ -15,6 +15,7 @@
   <a href="{{ url_for('search', lang=lang) }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
   <a href="{{ url_for('logout') }}">🚪 {% if lang == 'fr' %}Déconnexion{% elif lang == 'sw' %}Toka{% else %}Logout{% endif %}</a>
 </div>
+<div class="container">
 <h1>{% if lang == 'fr' %}Bienvenue{% elif lang == 'sw' %}Karibu{% else %}Welcome{% endif %}</h1>
 
 <!-- Language Selector -->
