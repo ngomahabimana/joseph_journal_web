@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title>Daily Devotional</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <a href="{{ url_for('edit_devotional', lang=lang, date=current_date) }}">📝 {% if lang == 'fr' %}Modifier{% elif lang == 'sw' %}Hariri{% else %}Edit{% endif %}</a>
 </head>
 <body>
 <header>
@@ -23,21 +22,11 @@
         <h3>🙏 Prayer:</h3>
         <p>{{ devo["prayer"] }}</p>
     </div>
-<form action="{{ url_for('submit_devotional') }}" method="POST">
-  <input type="hidden" name="date" value="{{ current_date }}">
-  <input type="text" name="lang" value="{{ lang }}">
-  <input type="text" name="verse" placeholder="Verse">
-  <textarea name="text" placeholder="Message"></textarea>
-  <textarea name="reflection" placeholder="Reflection"></textarea>
-  <textarea name="prayer" placeholder="Prayer"></textarea>
-  <button type="submit">Save Devotional</button>
-</form>
-
-
-    {% if success %}
-    <p style="color: lightgreen; font-weight: bold;">Message sent successfully!</p>
-    {% endif %}
-
+    <p>
+      <a href="{{ url_for('edit_devotional', lang=lang, date=current_date) }}">
+        📝 {% if lang == 'fr' %}Modifier{% elif lang == 'sw' %}Hariri{% else %}Edit{% endif %}
+      </a>
+    </p>
 {% else %}
     <h2>⚠️ No devotional found for today ({{ lang.upper() }}).</h2>
     <p>Submit one now:</p>
@@ -54,6 +43,10 @@
         <textarea name="prayer" rows="3" placeholder="Prayer" required></textarea>
         <button type="submit">Submit Devotional</button>
     </form>
+{% endif %}
+
+{% if success %}
+    <p style="color: lightgreen; font-weight: bold;">Message sent successfully!</p>
 {% endif %}
 
 </div>
