@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from datetime import datetime
 import os
 import json
+from devotions import DEVOTIONS
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
@@ -22,11 +23,7 @@ def home():
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
-        today_entry = data.get(today, {})
-        if isinstance(today_entry, str):
-            devo = today_entry
-        else:
-            devo = today_entry.get(lang)
+        devo = data.get(today, {}).get(lang)
     return render_template("index.html", devo=devo, lang=lang)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -46,26 +43,31 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-@app.route("/journal", methods=["GET", "POST"])
+@app.route("/journal", methods=["GET"], endpoint="journal")
 def journal():
     if "user" not in session:
         return redirect(url_for("login"))
     lang = request.args.get("lang", "en")
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"journal_{date_str}_{lang}.txt"
-
-    if request.method == "POST":
-        entry = request.form.get("entry", "")
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(entry)
-        flash("✅ Entry saved successfully.")
-        return redirect(url_for("journal", lang=lang))
-
     content = ""
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             content = f.read()
     return render_template("journal.html", lang=lang, entry=content)
+
+@app.route("/journal", methods=["POST"], endpoint="save_journal")
+def save_journal():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    lang = request.form.get("lang", "en")
+    entry = request.form.get("entry", "")
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    filename = f"journal_{date_str}_{lang}.txt"
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(entry)
+    flash("✅ Entry saved successfully.")
+    return redirect(url_for("journal") + f"?lang={lang}")
 
 @app.route("/entries")
 def entries():
@@ -94,25 +96,29 @@ def clear():
         flash("🗑️ Today's journal entry has been cleared.")
     else:
         flash("⚠️ No entry found for today.")
-    return redirect(url_for("journal", lang=lang))
+    return redirect(url_for("journal") + f"?lang={lang}")
 
 @app.route("/export_pdf")
 def export_pdf():
     if "user" not in session:
         return redirect(url_for("login"))
+
     lang = request.args.get("lang", "en")
     files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(f"_{lang}.txt")]
     files.sort()
+
     pdf_path = "journal_export.pdf"
     c = canvas.Canvas(pdf_path, pagesize=LETTER)
     width, height = LETTER
     y = height - 50
+
     for file in files:
         with open(file, "r", encoding="utf-8") as f:
             date = file.replace("journal_", "").replace(f"_{lang}.txt", "")
             c.setFont("Helvetica-Bold", 14)
             c.drawString(50, y, f"📅 {date}")
             y -= 20
+
             c.setFont("Helvetica", 12)
             for line in f.readlines():
                 for segment in line.strip().split("\n"):
@@ -121,49 +127,47 @@ def export_pdf():
                         y = height - 50
                     c.drawString(50, y, segment)
                     y -= 15
-            y -= 30
+
+            y -= 30  # Space between entries
+
     c.save()
+
     return send_file(pdf_path, as_attachment=True)
 
 @app.route("/view_by_date")
 def view_by_date():
     if "user" not in session:
         return redirect(url_for("login"))
-    date = request.args.get("date")
     lang = request.args.get("lang", "en")
+    date = request.args.get("date")
     filename = f"journal_{date}_{lang}.txt"
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             content = f.read()
     else:
-        content = {
-            "en": "No entry found for this date.",
-            "fr": "Aucune entrée trouvée pour cette date.",
-            "sw": "Hakuna maandishi yaliyopatikana kwa tarehe hii.",
-        }.get(lang, "No entry found for this date.")
-    return f"<html lang='{lang}'><head><title>Journal Entry</title></head><body><h2>📅 {date}</h2><pre>{content}</pre><p><a href='{url_for('entries')}?lang={lang}'>← Back</a></p></body></html>"
-
+        content = "No entry found for this date."
+    return f"<h2>Journal Entry for {date}</h2><pre>{content}</pre><p><a href='/journal?lang={lang}'>Back</a></p>"
 @app.route("/devotional", methods=["GET", "POST"])
 def devotional():
     if "user" not in session:
         return redirect(url_for("login"))
+
     lang = request.args.get("lang", "en")
     today = datetime.now().strftime("%Y-%m-%d")
     filename = "dynamic_devotions.json"
     messages_filename = f"devotional_messages_{today}.json"
+
     devo = None
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
-        today_entry = data.get(today, {})
-        if isinstance(today_entry, str):
-            devo = today_entry
-        else:
-            devo = today_entry.get(lang)
+        devo = data.get(today, {}).get(lang)
+
     messages = []
     if os.path.exists(messages_filename):
         with open(messages_filename, "r", encoding="utf-8") as f:
             messages = json.load(f)
+
     if request.method == "POST":
         if "message" in request.form:
             name = request.form.get("name")
@@ -176,6 +180,7 @@ def devotional():
             messages.append(entry)
             with open(messages_filename, "w", encoding="utf-8") as f:
                 json.dump(messages, f, ensure_ascii=False, indent=2)
+
     current_date = datetime.utcnow().strftime("%Y-%m-%d")
     return render_template("devotional.html", devo=devo, messages=messages, lang=lang, current_date=current_date)
 
@@ -183,43 +188,58 @@ def devotional():
 def submit_devotional():
     if "user" not in session:
         return redirect(url_for("login"))
+
     date = request.form["date"]
     lang = request.form["lang"]
     verse = request.form["verse"]
     text = request.form["text"]
     reflection = request.form["reflection"]
     prayer = request.form["prayer"]
+
     filename = "dynamic_devotions.json"
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
     else:
         data = {}
+
     data.setdefault(date, {})[lang] = {
         "verse": verse,
         "text": text,
         "reflection": reflection,
         "prayer": prayer
     }
+
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
     return redirect(url_for("devotional", lang=lang))
 
 @app.route("/about")
 def about():
-    lang = request.args.get("lang", "en")
-    return render_template("about.html", lang=lang)
+    return render_template("about.html")
 
-@app.route("/contact", methods=["GET", "POST"])
+@app.route("/contact")
 def contact():
-    lang = request.args.get("lang", "en")
+    return render_template("contact.html")
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    results = []
+    query = ""
     if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
-        message = request.form.get("message")
-        flash("✅ Your message has been received!")
-        return redirect(url_for("contact", lang=lang))
-    return render_template("contact.html", lang=lang)
+        query = request.form.get("query", "").lower()
+        files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(".txt")]
+        files.sort(reverse=True)
+        for file in files:
+            with open(file, "r", encoding="utf-8") as f:
+                content = f.read()
+                if query in content.lower():
+                    date = file.replace("journal_", "").replace(".txt", "")
+                    results.append(f"📅 {date}:\n{content.strip()}")
+    return render_template("search.html", results=results, query=query)
 
 @app.route("/message", methods=["GET", "POST"])
 def message():
