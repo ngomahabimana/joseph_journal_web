@@ -111,15 +111,18 @@ def save_journal():
 def entries():
     if "user" not in session:
         return redirect(url_for("login"))
+
     lang = request.args.get("lang", "en")
     files = [f for f in os.listdir() if f.startswith("journal_") and f.endswith(f"_{lang}.txt")]
     files.sort(reverse=True)
+
     all_entries = {}
     for file in files:
         with open(file, "r", encoding="utf-8") as f:
             date = file.replace("journal_", "").replace(f"_{lang}.txt", "")
             content = f.read()
             all_entries[date] = content
+
     return render_template("entries.html", entries=all_entries, lang=lang)
 
 @app.route("/clear", methods=["POST"])
