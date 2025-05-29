@@ -31,13 +31,51 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        if username == stored_username and bcrypt.check_password_hash(stored_password_hash, password):
+
+        if os.path.exists("users.json"):
+            with open("users.json", "r", encoding="utf-8") as f:
+                users = json.load(f)
+        else:
+            users = {}
+
+        stored_hash = users.get(username)
+        if stored_hash and bcrypt.check_password_hash(stored_hash, password):
             session["user"] = username
             return redirect(url_for("journal"))
         else:
-            return "Invalid credentials. <a href='/login'>Try again</a>"
-    return render_template("login.html")
+            flash("❌ Invalid username or password.")
+            return redirect(url_for("login"))
 
+    return render_template("login.html")
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if not username or not password:
+            flash("❗ Username and password are required.")
+            return redirect(url_for("register"))
+
+        if os.path.exists("users.json"):
+            with open("users.json", "r", encoding="utf-8") as f:
+                users = json.load(f)
+        else:
+            users = {}
+
+        if username in users:
+            flash("⚠️ Username already exists. Choose another.")
+            return redirect(url_for("register"))
+
+        password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
+        users[username] = password_hash
+
+        with open("users.json", "w", encoding="utf-8") as f:
+            json.dump(users, f, indent=2)
+
+        flash("✅ Registration successful. Please log in.")
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
 @app.route("/logout")
 def logout():
     session.clear()
