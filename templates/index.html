@@ -8,16 +8,17 @@
 </head>
 <body>
 <div class="fixed-nav">
-  <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a>
-  <a href="{{ url_for('journal', lang=lang) }}">📝 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a>
-  <a href="{{ url_for('entries', lang=lang) }}">📖 {% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</a>
-  <a href="{{ url_for('devotional', lang=lang) }}">🙏 {% if lang == 'fr' %}Méditation{% elif lang == 'sw' %}Mafundisho{% else %}Devotional{% endif %}</a>
-  <a href="{{ url_for('search', lang=lang) }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
-  <a href="{{ url_for('logout') }}">🚪 {% if lang == 'fr' %}Déconnexion{% elif lang == 'sw' %}Toka{% else %}Logout{% endif %}</a>
-<!-- 🌙 Dark Mode Toggle Button -->
-  <button onclick="toggleDarkMode()" style="margin-left: 20px; padding: 0.4rem 0.8rem; border-radius: 8px;">
-    🌓 Toggle Theme
-  </button>
+  <a href="{{ url_for('home', lang=lang) }}">🏠 Home</a>
+  <a href="{{ url_for('journal', lang=lang) }}">📝 Journal</a>
+  <a href="{{ url_for('entries', lang=lang) }}">📖 Entries</a>
+  <a href="{{ url_for('devotional', lang=lang) }}">🙏 Devotional</a>
+  <a href="{{ url_for('search', lang=lang) }}">🔍 Search</a>
+  <a href="{{ url_for('edit_devotional', lang=lang, date=current_date) }}">📝 Edit Devotional</a>
+  <a href="{{ url_for('contact') }}">📬 Contact</a>
+  <a href="{{ url_for('about') }}">👤 About</a>
+  <a href="{{ url_for('logout') }}">🚪 Logout</a>
+
+  <button onclick="toggleDarkMode()" style="margin-left: 20px;">🌓 Toggle Theme</button>
 </div>
 <div class="container">
 <h1>{% if lang == 'fr' %}Bienvenue{% elif lang == 'sw' %}Karibu{% else %}Welcome{% endif %}</h1>
