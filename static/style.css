@@ -1,5 +1,6 @@
 
-/* Reset and base styles */
+
+/* Base Styles */
 body {
   font-family: 'Poppins', sans-serif;
   background: url("/static/bg.jpg") no-repeat center center fixed;
@@ -20,153 +21,125 @@ body {
   margin: 0 auto;
 }
 
-nav {
+nav, .fixed-nav {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 1rem;
   border-radius: 5px;
   margin-bottom: 2rem;
 }
 
-nav a {
+nav a, .fixed-nav a {
   color: #ffffff;
   text-decoration: none;
   margin: 0 10px;
   font-weight: bold;
 }
 
-nav a:hover {
+nav a:hover, .fixed-nav a:hover {
   text-decoration: underline;
 }
 
 button {
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   background-color: #4CAF50;
-  border: none;
-  border-radius: 5px;
   color: white;
-  font-size: 1rem;
+  border: none;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
   background-color: #45a049;
 }
 
-textarea {
+textarea, input[type="text"], select {
   width: 100%;
-  padding: 1rem;
-  border-radius: 5px;
-  border: none;
+  padding: 0.75rem;
   margin-bottom: 1rem;
-  resize: vertical;
-  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  color: #000;
 }
 
-pre {
-  text-align: left;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+label {
+  font-weight: bold;
 }
 
 footer {
   margin-top: 2rem;
   font-size: 0.9rem;
-  color: #ddd;
 }
 
-header {
-  margin-bottom: 2rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 1.5rem;
-  border-radius: 10px;
+/* Dark Mode Support */
+body.dark-mode {
+  background: #121212 !important;
+  color: #e0e0e0;
+  backdrop-filter: none;
 }
 
-header p {
-  color: #ffffff;
-  font-size: 1.1rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+body.dark-mode .container,
+body.dark-mode header,
+body.dark-mode nav,
+body.dark-mode .fixed-nav {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #e0e0e0;
 }
 
-.about-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+  color: #e0e0e0;
 }
 
-.about-content {
-  text-align: left;
-}
-
-.author-photo {
-  width: 200px;
-  height: auto;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-h1, h2, h3 {
-  color: #ffffff;
-  margin-top: 0;
-}
-
-p {
-  color: #f0f0f0;
-  line-height: 1.6;
-  font-size: 1rem;
-}
-
-.amazon-link {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 10px 20px;
-  background-color: #ff9900;
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #1e1e1e;
   color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  border: 1px solid #555;
 }
 
-.amazon-link:hover {
-  background-color: #cc7a00;
+/* Fixed Navigation Bar */
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
 }
 
-/* Language selector dropdown */
-form select[name="lang"] {
-  background-color: #ffffff;
-  color: #000000;
-  font-size: 1rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: none;
-  margin-bottom: 1.5rem;
-  cursor: pointer;
+body {
+  padding-top: 90px; /* For fixed nav */
 }
 
-form select[name="lang"]:hover {
-  background-color: #f0f0f0;
-}
-
-/* Adjust label visibility on dark backgrounds */
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-/* Responsive improvement */
+/* Responsive Design */
 @media (max-width: 600px) {
-  .container {
-    padding: 1rem;
+  .fixed-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
-  textarea {
-    font-size: 0.9rem;
+  nav a, .fixed-nav a {
+    margin: 5px 0;
+    display: block;
   }
 
-  button {
-    font-size: 0.9rem;
+  .author-photo {
+    width: 120px;
+  }
+
+  h1, h2 {
+    font-size: 1.5rem;
   }
 }
