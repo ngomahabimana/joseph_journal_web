@@ -227,47 +227,46 @@ def edit_devotional():
     if "user" not in session:
         return redirect(url_for("login"))
 
-    filename = "dynamic_devotions.json"
     lang = request.args.get("lang", "en")
-   date = request.args.get("date", datetime.now().strftime("%Y-%m-%d"))
-lang = request.args.get("lang", "en")
-filename = "dynamic_devotions.json"
+    date = request.args.get("date", datetime.now().strftime("%Y-%m-%d"))
+    filename = "dynamic_devotions.json"
 
-devotional_data = {}
-if os.path.exists(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        devotional_data = json.load(f)
+    # Load existing devotional data
+    devotional_data = {}
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            devotional_data = json.load(f)
 
-current_devotional = devotional_data.get(date, {}).get(lang, {
-    "verse": "",
-    "text": "",
-    "reflection": "",
-    "prayer": ""
-})
+    current_devotional = devotional_data.get(date, {}).get(lang, {
+        "verse": "",
+        "text": "",
+        "reflection": "",
+        "prayer": ""
+    })
 
-if request.method == "POST":
-    verse = request.form["verse"]
-    text = request.form["text"]
-    reflection = request.form["reflection"]
-    prayer = request.form["prayer"]
+    if request.method == "POST":
+        verse = request.form.get("verse", "")
+        text = request.form.get("text", "")
+        reflection = request.form.get("reflection", "")
+        prayer = request.form.get("prayer", "")
 
-    if date not in devotional_data:
-        devotional_data[date] = {}
+        if date not in devotional_data:
+            devotional_data[date] = {}
 
-    devotional_data[date][lang] = {
-        "verse": verse,
-        "text": text,
-        "reflection": reflection,
-        "prayer": prayer
-    }
+        devotional_data[date][lang] = {
+            "verse": verse,
+            "text": text,
+            "reflection": reflection,
+            "prayer": prayer
+        }
 
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump(devotional_data, f, ensure_ascii=False, indent=2)
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(devotional_data, f, ensure_ascii=False, indent=2)
 
-    flash("✅ Devotional updated successfully!")
-    return redirect(url_for("devotional", lang=lang))
+        flash("✅ Devotional updated successfully!")
+        return redirect(url_for("devotional", lang=lang))
 
-return render_template("edit_devotional.html", date=date, lang=lang, devo=current_devotional)
+    return render_template("edit_devotional.html", date=date, lang=lang, devo=current_devotional)
 
 @app.route("/submit_devotional", methods=["POST"])
 def submit_devotional():
