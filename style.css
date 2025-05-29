@@ -1,100 +1,145 @@
 
-/* Reset */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: url("/static/bg.jpg") no-repeat center center fixed;
-    background-size: cover;
-    color: #fff;
-    height: 100%;
+
+/* Base Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url("/static/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  padding: 2rem;
+  color: #ffffff;
+  text-align: center;
+  backdrop-filter: brightness(0.85);
 }
 
-/* Navigation bar */
-nav {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 15px;
-    text-align: center;
-    font-size: 18px;
-    border-bottom: 1px solid #888;
-}
-
-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-/* Container */
 .container {
-    background-color: rgba(0, 0, 0, 0.6);
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-/* Headings */
-h1, h2, h3 {
-    text-align: center;
-    color: #ffd700;
+nav, .fixed-nav {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 2rem;
 }
 
-/* Forms */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+nav a, .fixed-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
 }
 
-input[type="text"], input[type="password"], textarea, select {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #000;
+nav a:hover, .fixed-nav a:hover {
+  text-decoration: underline;
 }
 
 button {
-    padding: 10px;
-    background-color: #ffd700;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
-    background-color: #ffc107;
+  background-color: #45a049;
 }
 
-/* Flash messages */
-.flash {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    background-color: #28a745;
-    color: white;
+textarea, input[type="text"], select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  color: #000;
 }
 
-/* Search result box */
-.result-box {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    margin-bottom: 10px;
-    border-left: 3px solid #ffd700;
+label {
+  font-weight: bold;
 }
 
-/* Devotional message */
-.message-box {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 10px;
+footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+/* Dark Mode Support */
+body.dark-mode {
+  background: #121212 !important;
+  color: #e0e0e0;
+  backdrop-filter: none;
+}
+
+body.dark-mode .container,
+body.dark-mode header,
+body.dark-mode nav,
+body.dark-mode .fixed-nav {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #e0e0e0;
+}
+
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+  color: #e0e0e0;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+/* Fixed Navigation Bar */
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+body {
+  padding-top: 90px; /* For fixed nav */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .fixed-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  nav a, .fixed-nav a {
+    margin: 5px 0;
+    display: block;
+  }
+
+  .author-photo {
+    width: 120px;
+  }
+
+  h1, h2 {
+    font-size: 1.5rem;
+  }
 }
