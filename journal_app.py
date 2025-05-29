@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from datetime import datetime
 import os
 import json
-# from devotions import DEVOTIONS  # Unused, commented out
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
@@ -43,31 +42,26 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-@app.route("/journal", methods=["GET"], endpoint="journal")
+@app.route("/journal", methods=["GET", "POST"])
 def journal():
     if "user" not in session:
         return redirect(url_for("login"))
     lang = request.args.get("lang", "en")
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"journal_{date_str}_{lang}.txt"
+
+    if request.method == "POST":
+        entry = request.form.get("entry", "")
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(entry)
+        flash("✅ Entry saved successfully.")
+        return redirect(url_for("journal", lang=lang))
+
     content = ""
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             content = f.read()
     return render_template("journal.html", lang=lang, entry=content)
-
-@app.route("/journal", methods=["POST"], endpoint="save_journal")
-def save_journal():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    lang = request.form.get("lang", "en")
-    entry = request.form.get("entry", "")
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    filename = f"journal_{date_str}_{lang}.txt"
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(entry)
-    flash("✅ Entry saved successfully.")
-    return redirect(url_for("journal") + f"?lang={lang}")
 
 @app.route("/entries")
 def entries():
@@ -96,7 +90,7 @@ def clear():
         flash("🗑️ Today's journal entry has been cleared.")
     else:
         flash("⚠️ No entry found for today.")
-    return redirect(url_for("journal") + f"?lang={lang}")
+    return redirect(url_for("journal", lang=lang))
 
 @app.route("/export_pdf")
 def export_pdf():
@@ -121,28 +115,26 @@ def export_pdf():
 
             c.setFont("Helvetica", 12)
             for line in f.readlines():
-                for segment in line.strip().split("\n"):
+                for segment in line.strip().split("
+"):
                     if y < 50:
                         c.showPage()
                         y = height - 50
                     c.drawString(50, y, segment)
                     y -= 15
 
-            y -= 30  # Space between entries
+            y -= 30
 
     c.save()
-
     return send_file(pdf_path, as_attachment=True)
 
 @app.route("/view_by_date")
 def view_by_date():
     if "user" not in session:
         return redirect(url_for("login"))
-
     date = request.args.get("date")
     lang = request.args.get("lang", "en")
     filename = f"journal_{date}_{lang}.txt"
-
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             content = f.read()
@@ -152,17 +144,7 @@ def view_by_date():
             "fr": "Aucune entrée trouvée pour cette date.",
             "sw": "Hakuna maandishi yaliyopatikana kwa tarehe hii.",
         }.get(lang, "No entry found for this date.")
-
-    return f"""
-    <html lang="{lang}">
-    <head><title>Journal Entry</title></head>
-    <body>
-        <h2>📅 {date}</h2>
-        <pre>{content}</pre>
-        <p><a href="{url_for('entries')}?lang={lang}">← {'Retour' if lang == 'fr' else 'Rudi' if lang == 'sw' else 'Back'}</a></p>
-    </body>
-    </html>
-    """
+    return f"<html lang='{lang}'><head><title>Journal Entry</title></head><body><h2>📅 {date}</h2><pre>{content}</pre><p><a href='{url_for('entries')}?lang={lang}'>← Back</a></p></body></html>"
 @app.route("/devotional", methods=["GET", "POST"])
 def devotional():
     if "user" not in session:
