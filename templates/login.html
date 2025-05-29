@@ -31,6 +31,7 @@
 {% endwith %}
 
 <!-- Language Selector -->
+<p><a href="{{ url_for('register') }}">🆕 Create a new account</a></p>
 <form method="get" action="{{ url_for('login') }}" style="margin-top: 20px;">
   <label for="lang">🌐 Language:</label>
   <select name="lang" id="lang" onchange="this.form.submit()">
