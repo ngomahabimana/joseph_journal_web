@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Daily Devotional</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <a href="{{ url_for('edit_devotional', lang=lang, date=current_date) }}">📝 {% if lang == 'fr' %}Modifier{% elif lang == 'sw' %}Hariri{% else %}Edit{% endif %}</a>
 </head>
 <body>
 <header>
