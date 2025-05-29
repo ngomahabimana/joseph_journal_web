@@ -1,37 +1,95 @@
 <!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>📝 Edit Devotional</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 10px;
+      display: block;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+    }
+    button {
+      display: block;
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .back-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .back-link a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h1>📝 {% if lang == 'fr' %}Modifier la Méditation{% elif lang == 'sw' %}Hariri Mafundisho{% else %}Edit Devotional{% endif %}</h1>
+  <div class="container">
+    <h2>📝 Edit Devotional for {{ date }}</h2>
+    <form method="POST">
+      <label for="verse">📖 Bible Verse:</label>
+      <input type="text" id="verse" name="verse" value="{{ devo.verse }}" required>
 
-  {% if message %}
-    <p style="color: green;">{{ message }}</p>
-  {% endif %}
+      <label for="text">🧾 Message:</label>
+      <textarea id="text" name="text" rows="4" required>{{ devo.text }}</textarea>
 
-  <form method="POST">
-    <input type="hidden" name="lang" value="{{ lang }}">
-    <label for="date">{% if lang == 'fr' %}Date:{% elif lang == 'sw' %}Tarehe:{% else %}Date:{% endif %}</label>
-    <input type="date" name="date" value="{{ date or '' }}" required><br><br>
+      <label for="reflection">🧠 Reflection:</label>
+      <textarea id="reflection" name="reflection" rows="4" required>{{ devo.reflection }}</textarea>
 
-    <label>📖 Verse:</label>
-    <input type="text" name="verse" value="{{ devotional.verse }}" required><br><br>
+      <label for="prayer">🙏 Prayer:</label>
+      <textarea id="prayer" name="prayer" rows="4" required>{{ devo.prayer }}</textarea>
 
-    <label>📜 Message:</label>
-    <textarea name="text" rows="3" required>{{ devotional.text }}</textarea><br><br>
-
-    <label>🧠 Reflection:</label>
-    <textarea name="reflection" rows="3" required>{{ devotional.reflection }}</textarea><br><br>
-
-    <label>🙏 Prayer:</label>
-    <textarea name="prayer" rows="3" required>{{ devotional.prayer }}</textarea><br><br>
-
-    <button type="submit">💾 {% if lang == 'fr' %}Mettre à jour{% elif lang == 'sw' %}Sasisha{% else %}Update{% endif %}</button>
-  </form>
-
-  <p><a href="{{ url_for('devotional', lang=lang) }}">← {% if lang == 'fr' %}Retour{% elif lang == 'sw' %}Nyuma{% else %}Back{% endif %}</a></p>
+      <button type="submit">💾 Update</button>
+    </form>
+    <div class="back-link">
+      <a href="{{ url_for('devotional', lang=lang) }}">← Back to Devotional Page</a>
+    </div>
+  </div>
 </body>
 </html>
