@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8" />
+  <title>📝 Edit Devotional</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>📝 {% if lang == 'fr' %}Modifier la Méditation{% elif lang == 'sw' %}Hariri Mafundisho{% else %}Edit Devotional{% endif %}</h1>
+
+  {% if message %}
+    <p style="color: green;">{{ message }}</p>
+  {% endif %}
+
+  <form method="POST">
+    <input type="hidden" name="lang" value="{{ lang }}">
+    <label for="date">{% if lang == 'fr' %}Date:{% elif lang == 'sw' %}Tarehe:{% else %}Date:{% endif %}</label>
+    <input type="date" name="date" value="{{ date or '' }}" required><br><br>
+
+    <label>📖 Verse:</label>
+    <input type="text" name="verse" value="{{ devotional.verse }}" required><br><br>
+
+    <label>📜 Message:</label>
+    <textarea name="text" rows="3" required>{{ devotional.text }}</textarea><br><br>
+
+    <label>🧠 Reflection:</label>
+    <textarea name="reflection" rows="3" required>{{ devotional.reflection }}</textarea><br><br>
+
+    <label>🙏 Prayer:</label>
+    <textarea name="prayer" rows="3" required>{{ devotional.prayer }}</textarea><br><br>
+
+    <button type="submit">💾 {% if lang == 'fr' %}Mettre à jour{% elif lang == 'sw' %}Sasisha{% else %}Update{% endif %}</button>
+  </form>
+
+  <p><a href="{{ url_for('devotional', lang=lang) }}">← {% if lang == 'fr' %}Retour{% elif lang == 'sw' %}Nyuma{% else %}Back{% endif %}</a></p>
+</body>
+</html>
