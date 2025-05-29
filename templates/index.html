@@ -14,6 +14,10 @@
   <a href="{{ url_for('devotional', lang=lang) }}">🙏 {% if lang == 'fr' %}Méditation{% elif lang == 'sw' %}Mafundisho{% else %}Devotional{% endif %}</a>
   <a href="{{ url_for('search', lang=lang) }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
   <a href="{{ url_for('logout') }}">🚪 {% if lang == 'fr' %}Déconnexion{% elif lang == 'sw' %}Toka{% else %}Logout{% endif %}</a>
+<!-- 🌙 Dark Mode Toggle Button -->
+  <button onclick="toggleDarkMode()" style="margin-left: 20px; padding: 0.4rem 0.8rem; border-radius: 8px;">
+    🌓 Toggle Theme
+  </button>
 </div>
 <div class="container">
 <h1>{% if lang == 'fr' %}Bienvenue{% elif lang == 'sw' %}Karibu{% else %}Welcome{% endif %}</h1>
