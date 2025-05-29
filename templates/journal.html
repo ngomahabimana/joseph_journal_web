@@ -5,6 +5,8 @@
   <title>{% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
+<body>
   <div class="fixed-nav">
   <a href="{{ url_for('home', lang=lang) }}">🏠 {% if lang == 'fr' %}Accueil{% elif lang == 'sw' %}Nyumbani{% else %}Home{% endif %}</a>
   <a href="{{ url_for('journal', lang=lang) }}">📝 {% if lang == 'fr' %}Journal{% elif lang == 'sw' %}Jarida{% else %}Journal{% endif %}</a>
@@ -13,8 +15,6 @@
   <a href="{{ url_for('search', lang=lang) }}">🔍 {% if lang == 'fr' %}Recherche{% elif lang == 'sw' %}Tafuta{% else %}Search{% endif %}</a>
   <a href="{{ url_for('logout') }}">🚪 {% if lang == 'fr' %}Déconnexion{% elif lang == 'sw' %}Toka{% else %}Logout{% endif %}</a>
 </div>
-
-<body>
 
 <!-- Language Selector -->
 <form method="get" action="{{ url_for('journal') }}" style="margin-bottom: 15px;">
