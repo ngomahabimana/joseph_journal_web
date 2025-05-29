@@ -1,65 +1,63 @@
 <!DOCTYPE html>
-<html lang="{{ lang }}">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>📖 Daily Devotional</title>
-  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <title>Daily Devotional</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-  <nav>
-    <a href="/">🏠 Home</a> |
-    <a href="/entries">📚 Journal Entries</a> |
-    <a href="/devotional">🙏 Devotionals</a> |
-    <a href="/message">📨 Message</a> |
-    <a href="/logout">🚪 Logout</a>
-  </nav>
+<header>
+    <h1>📖 Daily Devotional</h1>
+    <p>Spiritual strength for {{ lang.upper() }} - {{ devo['verse'] if devo else 'New Message' }}</p>
+</header>
 
-  <div class="container">
-    <h1>📖 Daily Devotional for {{ current_date }}</h1>
+<div class="container">
 
-    {% if devo %}
-      <div class="devotional-box">
-        <p><strong>📖 Verse:</strong> {{ devo.verse }}</p>
-        <p><strong>📝 Text:</strong> {{ devo.text }}</p>
-        <p><strong>💭 Reflection:</strong> {{ devo.reflection }}</p>
-        <p><strong>🙏 Prayer:</strong> {{ devo.prayer }}</p>
-        <form action="/submit_devotional" method="POST">
-          <input type="hidden" name="date" value="{{ current_date }}">
-          <input type="hidden" name="lang" value="{{ lang }}">
-          <button type="submit" formaction="/edit_devotional">✏️ Edit Today's Devotional</button>
-        </form>
-      </div>
-    {% else %}
-      <p>No devotional found for today in this language.</p>
+{% if devo %}
+    <div class="devotional-card">
+        <h2>📘 {{ devo["verse"] }}</h2>
+        <p><em>{{ devo["text"] }}</em></p>
+        <h3>🧠 Reflection:</h3>
+        <p>{{ devo["reflection"] }}</p>
+        <h3>🙏 Prayer:</h3>
+        <p>{{ devo["prayer"] }}</p>
+    </div>
+<form action="{{ url_for('submit_devotional') }}" method="POST">
+  <input type="hidden" name="date" value="{{ current_date }}">
+  <input type="text" name="lang" value="{{ lang }}">
+  <input type="text" name="verse" placeholder="Verse">
+  <textarea name="text" placeholder="Message"></textarea>
+  <textarea name="reflection" placeholder="Reflection"></textarea>
+  <textarea name="prayer" placeholder="Prayer"></textarea>
+  <button type="submit">Save Devotional</button>
+</form>
+
+
+    {% if success %}
+    <p style="color: lightgreen; font-weight: bold;">Message sent successfully!</p>
     {% endif %}
 
-    <hr>
-
-    <h2>🗓️ Browse Another Date</h2>
-    <form method="get" action="/devotional">
-      <input type="date" name="date" max="{{ current_date }}">
-      <input type="hidden" name="lang" value="{{ lang }}">
-      <button type="submit">📅 View</button>
+{% else %}
+    <h2>⚠️ No devotional found for today ({{ lang.upper() }}).</h2>
+    <p>Submit one now:</p>
+    <form action="{{ url_for('submit_devotional') }}" method="POST">
+        <input type="text" name="date" value="{{ current_date }}" readonly />
+        <select name="lang" required>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="sw">Kiswahili</option>
+        </select><br><br>
+        <input type="text" name="verse" placeholder="Verse (e.g. John 3:16)" required />
+        <input type="text" name="text" placeholder="Verse Text" required />
+        <textarea name="reflection" rows="3" placeholder="Reflection" required></textarea>
+        <textarea name="prayer" rows="3" placeholder="Prayer" required></textarea>
+        <button type="submit">Submit Devotional</button>
     </form>
+{% endif %}
 
-    <hr>
-
-    <h2>🗣️ Share a Message or Prayer</h2>
-    <form method="POST">
-      <input type="text" name="name" placeholder="Your name" required><br><br>
-      <textarea name="message" placeholder="Your message or prayer" rows="5" required></textarea><br><br>
-      <button type="submit">Send Message</button>
-    </form>
-
-    {% if messages %}
-      <h3>📬 Reflections from Others</h3>
-      {% for msg in messages %}
-        <div class="message-box">
-          <p><strong>{{ msg.name }}</strong> <em>({{ msg.timestamp }})</em>:</p>
-          <p>{{ msg.message }}</p>
-        </div>
-      {% endfor %}
-    {% endif %}
-  </div>
+</div>
+<footer>
+    &copy; 2025 Joseph Habimana Ngoma. All rights reserved.
+</footer>
 </body>
 </html>
