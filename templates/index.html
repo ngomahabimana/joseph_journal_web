@@ -22,6 +22,11 @@
 </div>
 <div class="container">
 <h1>{% if lang == 'fr' %}Bienvenue{% elif lang == 'sw' %}Karibu{% else %}Welcome{% endif %}</h1>
+<p style="margin-top: 2rem;">
+  <a href="{{ url_for('about') }}">👤 Learn About the Author</a> |
+  <a href="{{ url_for('contact') }}">📬 Send a Message</a> |
+  <a href="{{ url_for('message') }}">📝 Submit a Testimonial</a>
+</p>
 
 <!-- Language Selector -->
 <form method="get" action="{{ url_for('home') }}" style="margin-bottom: 15px;">
