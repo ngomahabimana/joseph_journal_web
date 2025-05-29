@@ -51,7 +51,58 @@
   <a href="{{ url_for('entries', lang=lang) }}">📖 {% if lang == 'fr' %}Entrées{% elif lang == 'sw' %}Maandishi{% else %}Entries{% endif %}</a> |
   <a href="{{ url_for('login', lang=lang) }}">🔐 {% if lang == 'fr' %}Connexion{% elif lang == 'sw' %}Ingia{% else %}Login{% endif %}</a>
 </nav>
+<div class="container" style="text-align: center;">
+  <h2>📚 {% if lang == 'fr' %}Découvrez mes livres{% elif lang == 'sw' %}Vitabu Vyangu{% else %}Explore My Books{% endif %}</h2>
 
+  <p style="margin-bottom: 1rem;">
+    {% if lang == 'fr' %}
+      Visitez ma page auteur sur Amazon pour lire mes livres inspirants.
+    {% elif lang == 'sw' %}
+      Tembelea ukurasa wangu wa Amazon kuona vitabu vyangu vya kiroho.
+    {% else %}
+      Visit my Amazon author page to read my inspirational books.
+    {% endif %}
+  </p>
+
+  <<!-- 📚 Book Showcase -->
+<div style="text-align: center; margin-top: 40px;">
+  <h2>📚 {% if lang == 'fr' %}Découvrez mes livres{% elif lang == 'sw' %}Vitabu Vyangu{% else %}Explore My Books{% endif %}</h2>
+
+  <p style="margin-bottom: 1rem;">
+    {% if lang == 'fr' %}
+      Visitez ma page auteur sur Amazon pour lire mes livres inspirants.
+    {% elif lang == 'sw' %}
+      Tembelea ukurasa wangu wa Amazon kuona vitabu vyangu vya kiroho.
+    {% else %}
+      Visit my Amazon author page to read my inspirational books.
+    {% endif %}
+  </p>
+
+  <!-- Main Book Cover -->
+  <a href="https://www.amazon.com/stores/JOSEPH-HABIMANA-NGOMA/author/B0DGS28QLB" target="_blank">
+    <img src="{{ url_for('static', filename='images/cover.jpg') }}" alt="Main Book" style="width: 200px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); margin-bottom: 10px;">
+  </a>
+
+  <br>
+
+  <!-- Amazon Button -->
+  <a href="https://www.amazon.com/stores/JOSEPH-HABIMANA-NGOMA/author/B0DGS28QLB" target="_blank">
+    <button style="margin-top: 10px; padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 8px; background-color: #ff9900; color: white; border: none;">
+      🛒 {% if lang == 'fr' %}Voir sur Amazon{% elif lang == 'sw' %}Fungua Amazon{% else %}View on Amazon{% endif %}
+    </button>
+  </a>
+
+  <!-- Optional Additional Books -->
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 30px;">
+    <a href="https://www.amazon.com/dp/BOOK_ID_1" target="_blank">
+      <img src="{{ url_for('static', filename='images/book1.jpg') }}" alt="Book 1" style="width: 150px; border-radius: 8px;">
+    </a>
+    <a href="https://www.amazon.com/dp/BOOK_ID_2" target="_blank">
+      <img src="{{ url_for('static', filename='images/book2.jpg') }}" alt="Book 2" style="width: 150px; border-radius: 8px;">
+    </a>
+    <!-- Add more books as needed -->
+  </div>
+</div>
 <footer style="margin-top: 40px; text-align: center;">
   <p>© 2025 Joseph Ngoma. All rights reserved.</p>
 </footer>
